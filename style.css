@@ -1,0 +1,108 @@
+.deck
+{
+    width:50%;
+    margin: 20px auto;
+    background:dodgerblue;
+    border:solid 10px black;
+    padding: 10px;
+    border-radius:10px;
+    text-align: center;
+    color:white;
+}
+
+.card
+{
+    padding: 10px;
+    border: solid 1px #808080;
+    background-color: white;
+    display: inline-block;
+    border-radius: 10px;
+    font-size: 14pt;
+    text-align: center;
+    color:black;
+    margin: 3px;
+}
+
+.btn
+{
+    background:white;
+    padding: 10px 20px;
+    border-radius:30px;
+    margin: 10px;
+    display:inline-block;
+}
+
+.card .value{
+    font-size:15pt;
+    font-family: sans-serif;
+}
+
+.card .suit
+{
+    background-image: url('https://www.thatsoftwaredude.com/images/post/0f631eeb-6c4a-4bfd-9f86-e0a08ae8584b.png');
+    height: 100px;
+    width: 90px;
+}
+
+.card .diamonds
+{
+    background-position-y: 100px;
+}
+
+.card .hearts
+{
+    background-position-x: 90px;
+}
+
+.card .clubs
+{
+    background-position-x:90px;
+    background-position-y:100px;
+}
+
+/*****************************************************************************************************************/
+
+.handDealer
+{
+    height: 30%;
+    width: 10%;
+    border-style:solid;
+    border-color: #000000;
+    margin: auto;
+}
+
+.handPlayer
+{
+    height: 100%;
+    width: 10%;
+    border-style:solid;
+    border-color: #000000;
+    margin-left: 8%;
+    float: left;
+}
+
+.playerField
+{
+    position: absolute;
+    top: 50%;
+        height: 30%;
+        width: 99%;
+
+}
+
+.buttonField
+{
+    position: absolute;
+    top: 90%;
+        height: 10%;
+        width: 99%;
+
+}
+
+.buttons
+{
+    margin-left: 28.15%;
+    margin-right: 2.75%;
+    font-size: 150%;
+}
+

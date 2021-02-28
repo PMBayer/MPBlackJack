@@ -1,0 +1,58 @@
+<<html>
+<head>
+    <title>A Multiplayer Blackjack Game</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        function getUsername(){
+            var txt;
+            const username = prompt("Please enter a username: ", 'Enter name here!');
+            if(username == null || username == ''){
+                getUsername();
+            }else {
+                txt = username;
+                document.getElementById("demo").innerHTML = txt;
+
+            }
+        }
+    </script>
+</head>
+
+<body onload="getUsername()">
+            <h1 style align="center">A Multiplayer Blackjack Game</h1>
+
+            <div class="handDealer">
+                <text>Dealer</text>
+            </div>
+
+        <div class="playerField">
+                <div class="handPlayer">
+                    <text><p id="demo"></p></text>
+                </div>
+                <div class="handPlayer">
+                    <text>Player 2</text>
+                </div>
+                <div class="handPlayer">
+                    <text>Player 3</text>
+                </div>
+                <div class="handPlayer">
+                    <text>Player 4</text>
+                </div>
+                <div class="handPlayer">
+                    <text>Player 5</text>
+                </div>
+        </div>
+
+            <div class="buttonField">
+                <button onclick="getElementById('demo').innerHTML = getElementById('demo').innerHTML+ 'Karten </br>'" class="buttons">Ziehen</button>
+                <button onclick="getElementById('demo').innerHTML = getElementById('demo').innerHTML+ 'Karten </br>'" class="buttons">Weiter</button>
+            </div>
+
+
+
+
+
+</body>
+<script src="/static/game.js"></script>
+</html>
