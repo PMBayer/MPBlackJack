@@ -101,8 +101,25 @@
 
 .buttons
 {
-    margin-left: 28.15%;
+    margin-left: 20%;
     margin-right: 2.75%;
     font-size: 150%;
+}
+
+.joinButtons
+{
+    /*margin-left: 30%;
+    font-size: 150%;
+    position:relative;
+    alignment: bottom;*/
+
+    font-size: 100%;
+    position: relative;
+    top: 90%;
+    left: 50%;
+    bottom: 0px;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%)
+
 }
 

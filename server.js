@@ -27,7 +27,12 @@ server.listen(5000, function() {
 
 //Add WebSocket handlers
 io.on('connection', function(socket) {
-    console.log('made connection to socket at: ' + getTime());
+    console.log('made socket connection at: ' + getTime());
+
+    socket.on('username', function(data){
+        console.log(data);
+        io.sockets.emit('username', data);
+    });
 });
 
 function getTime(){
@@ -39,17 +44,17 @@ function getTime(){
 const players = {};
 io.on('connection', (socket) => {
     players[socket.id] = {
-        'name' : 'user'
+        'name' : 'enter name here',
+        'handValue' : 0,
     }
     console.log(players);
 
 
     socket.on('disconnect', () => {
-        console.log('Player disconnected!');
-
+        console.log('Player ' + players[socket.id].name + ' disconnected!');
         delete players[socket.id];
-
         console.log(players);
     })
 });
+
 

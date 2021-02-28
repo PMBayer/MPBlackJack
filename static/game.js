@@ -1,7 +1,38 @@
-const socket = io();
-socket.on('message', (data) => {
-    console.log(data)
+const socket = io.connect('http://localhost:5000');
+
+//Query DOM
+
+const nameP1 = document.getElementById('nameP1');
+const nameP2 = document.getElementById('nameP2');
+const nameP3 = document.getElementById('nameP3');
+const nameP4 = document.getElementById('nameP4');
+const nameP5 = document.getElementById('nameP5');
+
+
+//Emit Events
+function x(){
+        const username = document.getElementById('x').innerHTML;
+        socket.emit('username', {
+            username : username,
+        });}
+
+
+
+
+//Listen for Events
+socket.on('username', function(data){
+    nameP1.innerHTML += '<p>' + data.username + '</p>';
 });
+
+
+
+
+
+
+
+
+
+
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));

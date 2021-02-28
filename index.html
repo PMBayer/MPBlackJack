@@ -3,6 +3,7 @@
     <title>A Multiplayer Blackjack Game</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <script src="/socket.io/socket.io.js"></script>
+    <meta charset="UTF-8">
 
     <script>
         function getUsername(){
@@ -12,14 +13,18 @@
                 getUsername();
             }else {
                 txt = username;
-                document.getElementById("demo").innerHTML = txt;
-
+                document.getElementById('x').innerHTML = username;
+                x();
             }
         }
+
     </script>
+
+    <p id="x" ></p>
 </head>
 
 <body onload="getUsername()">
+
             <h1 style align="center">A Multiplayer Blackjack Game</h1>
 
             <div class="handDealer">
@@ -28,31 +33,34 @@
 
         <div class="playerField">
                 <div class="handPlayer">
-                    <text><p id="demo"></p></text>
+                    <text><p id="nameP1"></p></text>
+
                 </div>
                 <div class="handPlayer">
-                    <text>Player 2</text>
+                    <text><p id="nameP2"></p></text>
+
                 </div>
                 <div class="handPlayer">
-                    <text>Player 3</text>
+                    <text><p id="nameP3"></p></text>
+
                 </div>
                 <div class="handPlayer">
-                    <text>Player 4</text>
+                    <text><p id="nameP4"></p></text>
+
                 </div>
-                <div class="handPlayer">
-                    <text>Player 5</text>
+                <div class="handPlayer" >
+                    <text><p id="nameP5"></p></text>
+
                 </div>
         </div>
 
             <div class="buttonField">
-                <button onclick="getElementById('demo').innerHTML = getElementById('demo').innerHTML+ 'Karten </br>'" class="buttons">Ziehen</button>
-                <button onclick="getElementById('demo').innerHTML = getElementById('demo').innerHTML+ 'Karten </br>'" class="buttons">Weiter</button>
+                <button class="buttons">Ziehen</button>
+                <button class="buttons">Start</button>
+                <button class="buttons">Weiter</button>
             </div>
 
 
-
-
-
 </body>
-<script src="/static/game.js"></script>
+<script type="text/javascript" src='static\game.js'></script>
 </html>
