@@ -10,7 +10,7 @@ const nameP5 = document.getElementById('nameP5');
 
 
 //Emit Events
-function x(){
+function emitUsername(){
         const username = document.getElementById('x').innerHTML;
         socket.emit('username', {
             username : username,
