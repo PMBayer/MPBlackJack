@@ -78,6 +78,7 @@ function decMaxPlayer2(x){
         for(i = 0; i < ws.length; i++){
             if(players[ws[i]].playerNumber === 6){
                 players[ws[i]].playerNumber = x;
+                u = true;
             }
 
             if(players[ws[i]].playerNumber >= 7){
@@ -99,8 +100,18 @@ function decMaxPlayer1(x){
 }
 function removeWS(x){
     const index = ws.indexOf(x);
-    const c = ws.splice(index, 1);
+    if(u){
+        const spliced = ws.splice(5,1);
+        ws[index] = spliced;
+        u = false;
+    }else{
+        const c = ws.splice(index, 1);
+    }
+
 }
+
+let u = false;
+
 
 io.on('connection', (socket) => {
     addWS(socket.id);
@@ -121,6 +132,7 @@ io.on('connection', (socket) => {
         }
         removeWS(ws[players[socket.id].playerNumber - 1]);
         delete players[socket.id];
+        console.log(ws);
         console.log(players);
     })
 });
