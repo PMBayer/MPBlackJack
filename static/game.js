@@ -120,6 +120,7 @@ function readyCheck(){
         nameP1.innerHTML = '<p><strong>' + checked + '</strong></p>';
     }
     sendReadyAmountToServer();
+    socket.emit('transferReadyAmount');
     socket.emit('refreshButton');
 }
 
@@ -145,11 +146,9 @@ function setReadyButton(){
     readyButton.innerHTML = "Bereit (" + readyAmount + "/" + playerAmount + ")";
 }
 
-function transferReadyAmount(){
-    socket.on('transferReadyAmount', function (data){
-        readyAmount = data
-    });
-}
+socket.on('transferReadyAmount', function (data){
+    readyAmount = data
+});
 
 function sendReadyAmountToServer(){
     socket.emit('setReadyAmount', readyAmount);
@@ -157,7 +156,6 @@ function sendReadyAmountToServer(){
 
 socket.on('refreshButton', function (data){
     nameP5.innerHTML = '<p><strong>' + 'hallo' + '</strong></p>';
-    transferReadyAmount();
     setTimeout(setReadyButton, 100);
 })
 

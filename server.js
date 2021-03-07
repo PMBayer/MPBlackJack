@@ -59,6 +59,10 @@ io.on('connection', function (socket) {
     socket.on('refreshButton', function(data){
         io.sockets.emit('refreshButton', 1);
     })
+
+    socket.on('transferReadyAmount', function (data){
+        io.sockets.emit('transferReadyAmount', readyAmount);
+    })
 });
 
 
