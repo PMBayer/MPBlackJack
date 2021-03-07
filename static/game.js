@@ -30,7 +30,6 @@ socket.on('username', function (data, ws, help) {
 
 socket.on('refresh', function (number){
    clearNameField(number);
-   //assignNameToField(data, ws);
 });
 
 function clearNameField(number){
@@ -53,6 +52,8 @@ function clearNameField(number){
                 break;
         }
     }
+    getPlayerAmount();
+    setTimeout(setReadyButton, 100);
 }
 
 function assignNameToField(data, ws, help) {
@@ -83,6 +84,8 @@ function assignNameToField(data, ws, help) {
             }
         }
     }
+    getPlayerAmount();
+    setTimeout(setReadyButton, 100);
 }
 
 /************************** Game Logic Implementation **********************/
@@ -90,11 +93,12 @@ function assignNameToField(data, ws, help) {
 let playerData = {};
 let checked = [];
 let playerAmount = 0;
-let a = 0;
+let readyAmount = 0;
+const readyButton = document.getElementById('ready')
 
 $("#ready").click(function(){
     getPlayerData();
-    getCheckedFromServer()
+    getCheckedFromServer();
     getPlayerAmount();
     setTimeout(readyCheck, 100);
 });
@@ -104,17 +108,19 @@ function readyCheck(){
         checked[playerData.playerNumber-1] = !checked[playerData.playerNumber-1];
     }
     socket.emit('checked', checked);
+    readyAmount = 0;
     for(let i = 0; i < 5; i++){
         if(checked[i] === true){
-            a++;
+            readyAmount++;
         }
     }
-    if(playerAmount === a){
-        nameP1.innerHTML = '<p><strong>' + "functioned" + '</strong></p>';
+    if(playerAmount === readyAmount){
+        nameP1.innerHTML = '<p><strong>' + "functioniert" + '</strong></p>';
     }else {
         nameP1.innerHTML = '<p><strong>' + checked + '</strong></p>';
     }
-    a = 0;
+    sendReadyAmountToServer();
+    socket.emit('refreshButton');
 }
 
 function getCheckedFromServer(){
@@ -135,5 +141,24 @@ function getPlayerAmount(){
     })
 }
 
+function setReadyButton(){
+    readyButton.innerHTML = "Bereit (" + readyAmount + "/" + playerAmount + ")";
+}
+
+function transferReadyAmount(){
+    socket.on('transferReadyAmount', function (data){
+        readyAmount = data
+    });
+}
+
+function sendReadyAmountToServer(){
+    socket.emit('setReadyAmount', readyAmount);
+}
+
+socket.on('refreshButton', function (data){
+    nameP5.innerHTML = '<p><strong>' + 'hallo' + '</strong></p>';
+    transferReadyAmount();
+    setTimeout(setReadyButton, 100);
+})
 
 

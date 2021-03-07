@@ -51,12 +51,22 @@ io.on('connection', function (socket) {
     socket.on('getPlayerAmount', function (data){
         io.sockets.emit('playerAmount', playerAmount);
     })
+
+    socket.on('setReadyAmount', function (data){
+        readyAmount = data;
+    });
+
+    socket.on('refreshButton', function(data){
+        io.sockets.emit('refreshButton', 1);
+    })
 });
 
 
 io.on('connection', (socket) => {
     playerAmount += 1;
     addWS(socket.id);
+
+    io.sockets.emit('transferReadyAmount', readyAmount);
     players[socket.id] = {
         'name': 'enter name here',
         'playerNumber': getPlayerNumber(),
@@ -74,10 +84,15 @@ io.on('connection', (socket) => {
         } else {
             decMaxPlayer1(players[socket.id].playerNumber);
         }
-        io.sockets.emit('refresh', players[socket.id].playerNumber);
         if(players[socket.id].playerNumber < 6){
-            checked[players[socket.id].playerNumber] = false;
+            if(checked[players[socket.id].playerNumber -1] === true){
+                readyAmount -= 1;
+            }
+            checked[players[socket.id].playerNumber - 1] = false;
         }
+        io.sockets.emit('transferReadyAmount', readyAmount);
+        io.sockets.emit('refresh', players[socket.id].playerNumber);
+
         delete players[socket.id];
         io.sockets.emit('username', players, ws, help);
         console.log(ws);
@@ -89,6 +104,7 @@ io.on('connection', (socket) => {
 
 let checked = [false, false, false, false, false];
 let playerAmount = 0;
+let readyAmount = 0;
 
 function getTime() {
     var today = new Date();
