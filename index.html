@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="#">
     <script src="/socket.io/socket.io.js"></script>
     <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
     <script>
         function getUsername(){
@@ -13,7 +14,6 @@
             if(username == null || username == ''){
                 getUsername();
             }else {
-                txt = username;
                 document.getElementById('x').innerHTML = username;
                 emitUsername();
             }
@@ -57,7 +57,7 @@
 
             <div class="buttonField">
                 <button class="buttons">Ziehen</button>
-                <button class="buttons">Start</button>
+                <button id="ready" class="buttons">Bereit</button>
                 <button class="buttons">Weiter</button>
             </div>
 

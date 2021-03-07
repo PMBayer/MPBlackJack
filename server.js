@@ -34,20 +34,39 @@ io.on('connection', function (socket) {
         console.log(players);
         io.sockets.emit('username', players, ws, help);
     });
+
+    socket.on('playerData', function (data){
+        io.sockets.emit('playerData', players[socket.id]);
+    });
+
+    socket.on('retrieveChecked', function (data){
+        io.sockets.emit('retrieveChecked', checked);
+    });
+
+    socket.on('checked', function(data){
+        checked = data;
+        io.sockets.emit('checked', checked);
+    })
+
+    socket.on('getPlayerAmount', function (data){
+        io.sockets.emit('playerAmount', playerAmount);
+    })
 });
 
 
 io.on('connection', (socket) => {
-    console.log(ws);
+    playerAmount += 1;
     addWS(socket.id);
     players[socket.id] = {
         'name': 'enter name here',
         'playerNumber': getPlayerNumber(),
         'handValue': 0,
+        'ready' : false,
     }
     console.log(players);
 
     socket.on('disconnect', () => {
+        playerAmount -= 1;
         console.log('Player ' + players[socket.id].name + ' disconnected at: ' + getTime());
         if (ws.length > 5) {
             decMaxPlayer2(players[socket.id].playerNumber);
@@ -55,7 +74,10 @@ io.on('connection', (socket) => {
         } else {
             decMaxPlayer1(players[socket.id].playerNumber);
         }
-        io.sockets.emit('refresh', players[socket.id].playerNumber)
+        io.sockets.emit('refresh', players[socket.id].playerNumber);
+        if(players[socket.id].playerNumber < 6){
+            checked[players[socket.id].playerNumber] = false;
+        }
         delete players[socket.id];
         io.sockets.emit('username', players, ws, help);
         console.log(ws);
@@ -64,6 +86,9 @@ io.on('connection', (socket) => {
 });
 
 /********************************************************************************************************************/
+
+let checked = [false, false, false, false, false];
+let playerAmount = 0;
 
 function getTime() {
     var today = new Date();
