@@ -8,7 +8,7 @@ var besonders = ['Bube', 'Dame', 'König']
 function Card(zahl, zeichen2) {
     this.number;
     if (zahl < 11) {
-        if (zahl == 1) {
+        if (zahl === 1) {
             this.number = 'Ass';
         } else {
             this.number = zahl;
@@ -23,7 +23,7 @@ function Card(zahl, zeichen2) {
     }
     this.wert = function () {
         if (zahl < 11) {
-            if (this.number == 'Ass') {
+            if (this.number === 'Ass') {
                 return 11;
             } else {
                 return zahl;
