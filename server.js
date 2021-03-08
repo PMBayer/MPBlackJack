@@ -46,11 +46,11 @@ io.on('connection', function (socket) {
     socket.on('checked', function(data){
         checked = data;
         io.sockets.emit('checked', checked);
-    })
+    });
 
     socket.on('getPlayerAmount', function (data){
         io.sockets.emit('playerAmount', playerAmount);
-    })
+    });
 
     socket.on('setReadyAmount', function (data){
         readyAmount = data;
@@ -58,15 +58,33 @@ io.on('connection', function (socket) {
 
     socket.on('refreshButton', function(data){
         io.sockets.emit('refreshButton', 1);
-    })
+    });
 
     socket.on('transferReadyAmount', function (data){
         io.sockets.emit('transferReadyAmount', readyAmount);
+    });
+
+    socket.on('transferCardDeck', function (data){
+        cardDeck = data;
+        console.log(cardDeck);
     })
+
+    socket.on('getCardDeck', function (data){
+        io.sockets.emit('getCardDeck', cardDeck);
+    });
+
+    socket.on('transferDealer', function (data){
+        dealer = data;
+        io.sockets.emit('showDealer', dealer);
+    });
 });
 
 
 io.on('connection', (socket) => {
+    if(playerAmount === 0){
+        io.sockets.emit('createCardDeck');
+    }
+
     playerAmount += 1;
     addWS(socket.id);
 
@@ -106,9 +124,11 @@ io.on('connection', (socket) => {
 
 /********************************************************************************************************************/
 
+let cardDeck;
 let checked = [false, false, false, false, false];
 let playerAmount = 0;
 let readyAmount = 0;
+let dealer;
 
 function getTime() {
     var today = new Date();

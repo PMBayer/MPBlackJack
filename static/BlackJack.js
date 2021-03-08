@@ -1,3 +1,18 @@
+/*************************** Functions used in Game.js *******************************/
+function deck(){
+    let Ziehstapel1 = new Ziehstapel();
+    Ziehstapel1.erneuern();
+    return Ziehstapel1;
+}
+
+function createDealer(deck){
+    let dealer1 = new dealer(deck);
+    return dealer1;
+}
+
+/************************* Game Logic *********************************/
+
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
@@ -53,6 +68,10 @@ function Ziehstapel() {
     this.geben = function () {
         const stelle = getRandomInt(this.stapel.length);
         const karte = this.stapel.splice(stelle, 1);
+        const mischen = this.leer();
+        if (mischen) {
+            this.erneuern();
+        }
         return karte[0];
     }
     this.leer = function () {
@@ -63,18 +82,11 @@ function Ziehstapel() {
     }
 }
 
-Ziehstapel1 = new Ziehstapel();
-Ziehstapel1.erneuern();
-
 function Hand(s) {
     this.blatt = [];
     this.ziehen = function () {
-        const hilf3 = Ziehstapel1.geben();
+        const hilf3 = s.geben();
         this.blatt.push(hilf3);
-        const mischen = s.leer();
-        if (mischen) {
-            s.erneuern();
-        }
     };
     this.zeigen = function (a) {
         const c = this.blatt[a];

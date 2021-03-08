@@ -6,6 +6,7 @@ const nameP2 = document.getElementById('nameP2');
 const nameP3 = document.getElementById('nameP3');
 const nameP4 = document.getElementById('nameP4');
 const nameP5 = document.getElementById('nameP5');
+const dealerText = document.getElementById('dealerID');
 
 
 /************************ Emit Events ***********************************/
@@ -31,6 +32,25 @@ socket.on('username', function (data, ws, help) {
 socket.on('refresh', function (number){
    clearNameField(number);
 });
+
+socket.on('refreshButton', function (data){
+    nameP5.innerHTML = '<p><strong>' + 'hallo' + '</strong></p>';
+    setTimeout(setReadyButton, 100);
+})
+
+socket.on('getCardDeck', function (data){
+    cardDeck = data;
+});
+
+socket.on('createCardDeck', function (data){
+    cardDeck = deck();
+    socket.emit('transferCardDeck', cardDeck);
+})
+
+socket.on('showDealer', function (data){
+    clientDealer = data;
+    dealerText.innerHTML += '<br>' + clientDealer.getDhand().volleHand();
+})
 
 function clearNameField(number){
     if(number < 6){
@@ -114,14 +134,15 @@ function readyCheck(){
             readyAmount++;
         }
     }
-    if(playerAmount === readyAmount){
-        nameP1.innerHTML = '<p><strong>' + "functioniert" + '</strong></p>';
-    }else {
-        nameP1.innerHTML = '<p><strong>' + checked + '</strong></p>';
-    }
     sendReadyAmountToServer();
     socket.emit('transferReadyAmount');
     socket.emit('refreshButton');
+
+    if(playerAmount === readyAmount){
+        startGame();
+    }else {
+        nameP1.innerHTML = '<p><strong>' + checked + '</strong></p>';
+    }
 }
 
 function getCheckedFromServer(){
@@ -154,9 +175,29 @@ function sendReadyAmountToServer(){
     socket.emit('setReadyAmount', readyAmount);
 }
 
-socket.on('refreshButton', function (data){
-    nameP5.innerHTML = '<p><strong>' + 'hallo' + '</strong></p>';
-    setTimeout(setReadyButton, 100);
-})
+
+
+let cardDeck;
+let clientDealer;
+
+function createCardDeck(){
+    cardDeck = deck();
+}
+
+function startGame() {
+    clientDealer = createDealer(cardDeck);
+    clientDealer.Dstart();
+    socket.emit('transferCardDeck', cardDeck)
+    socket.emit('transferDealer', clientDealer);
+}
+
+/************************* Universal Test Function *******************************/
+
+function test(){
+    cardDeck = deck();
+    const testVar = cardDeck.geben();
+    nameP4.innerHTML = '<p><strong>' + testVar.getCard() + '</strong></p>';
+}
+
 
 
