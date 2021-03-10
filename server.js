@@ -160,7 +160,7 @@ let readyAmount = 0;
 let dealer;
 let state = false;
 let currentPlayer = 1;
-let playerHands = [0, 0, 0,0 ,0];
+let playerHands = [];
 
 function getTime() {
     var today = new Date();

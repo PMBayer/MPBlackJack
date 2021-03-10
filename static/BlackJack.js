@@ -151,7 +151,7 @@ function Dspiel(h,s) {
 
 function spieler(s) {
     let sHandundstapel = [];
-    dHandundstapel=ziehen(sHandundstapel,s,2);
+    sHandundstapel = ziehen(sHandundstapel,s,1);
     return sHandundstapel;
 }
 

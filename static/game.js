@@ -224,6 +224,7 @@ function startGame() {
     for(let i = 0; i < 5; i++){
         if(checked[i] === true){
             d = spieler(cardDeck);
+            test(d[1])
             cardDeck = d[0];
             c = d[1];
             clientPlayer = c[0];
