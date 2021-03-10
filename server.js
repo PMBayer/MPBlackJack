@@ -75,6 +75,7 @@ io.on('connection', function (socket) {
 
     socket.on('transferDealer', function (data){
         dealer = data;
+        console.log(dealer);
         io.sockets.emit('showDealer', dealer);
     });
 
@@ -160,7 +161,7 @@ let readyAmount = 0;
 let dealer;
 let state = false;
 let currentPlayer = 1;
-let playerHands = [];
+let playerHands = [false, false, false, false, false];
 
 function getTime() {
     var today = new Date();

@@ -25,7 +25,7 @@ function getCard(zahl, zeichen2) {
 
 /* vermutlich nur für tests kann am ende vermutlich gelöscht werden */
 function getCardgesamt(c){
-    Gesamtekarte=c[0]+' '+c[1]+' ';
+    let Gesamtekarte=c[0]+' ';
     return Gesamtekarte;
 }
 
@@ -77,7 +77,7 @@ function Ziehstapelerneuern(s) {
 
 function ziehen(h,s,m) {
     let gesamt=[]
-    for (let d1 = m; d1 < 2; d1++) {
+    for (let d1 = 0; d1 < m; d1++) {
         let hilf3 = Ziehstapelgeben(s);
         h.push(hilf3[1]);
         s=hilf3[0];
@@ -151,7 +151,7 @@ function Dspiel(h,s) {
 
 function spieler(s) {
     let sHandundstapel = [];
-    sHandundstapel = ziehen(sHandundstapel,s,1);
+    sHandundstapel = ziehen(sHandundstapel,s,2);
     return sHandundstapel;
 }
 

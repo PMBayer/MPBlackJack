@@ -26,6 +26,7 @@ function getPlayerData(){
 }
 
 /*********************** Listen for Events ******************************/
+
 socket.on('username', function (data, ws, help) {
     assignNameToField(data, ws, help);
 });
@@ -50,7 +51,7 @@ socket.on('createCardDeck', function (data){
 
 socket.on('showDealer', function (data){
     clientDealer = data;
-    dealerText.innerHTML = 'Dealer ' + '<br>' + gesamteHand(clientDealer);
+    dealerText.innerHTML +='<br>' + gesamteHand(clientDealer);
 });
 
 socket.on('receivePlayer', function (data){
@@ -216,18 +217,16 @@ let clientPlayer;
 function startGame() {
     let a = dealer(cardDeck);
     cardDeck = a[0];
-    let b = a[1];
-    clientDealer = b[0];
+    clientDealer = a[1];
     let d;
     let c;
 
     for(let i = 0; i < 5; i++){
         if(checked[i] === true){
             d = spieler(cardDeck);
-            test(d[1])
             cardDeck = d[0];
-            c = d[1];
-            clientPlayer = c[0];
+            clientPlayer = d[1];
+            test(d[1])
             socket.emit('transferHand', clientPlayer, i);
         }
     }
