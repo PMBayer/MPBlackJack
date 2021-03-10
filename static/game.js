@@ -7,6 +7,7 @@ const nameP3 = document.getElementById('nameP3');
 const nameP4 = document.getElementById('nameP4');
 const nameP5 = document.getElementById('nameP5');
 const dealerText = document.getElementById('dealerID');
+const readyButton = document.getElementById('ready');
 
 
 /************************ Emit Events ***********************************/
@@ -43,14 +44,35 @@ socket.on('getCardDeck', function (data){
 });
 
 socket.on('createCardDeck', function (data){
-    cardDeck = deck();
+    cardDeck = getZiehstapel();
     socket.emit('transferCardDeck', cardDeck);
-})
+});
 
 socket.on('showDealer', function (data){
     clientDealer = data;
-    dealerText.innerHTML += '<br>' + clientDealer.getDhand().volleHand();
+    dealerText.innerHTML = 'Dealer ' + '<br>' + gesamteHand(clientDealer);
+});
+
+socket.on('receivePlayer', function (data){
+    playerNumber = data;
+});
+
+socket.on('changeState', function (data){
+    gameState = !gameState;
+});
+
+socket.on('getState', function (data){
+    gameState = data;
 })
+
+socket.on('gameInProgress', function (data){
+    gameInProgress();
+})
+
+socket.on('getGameInformation', function (data, data2){
+    currentPlayer = data;
+    checked = data2;
+});
 
 function clearNameField(number){
     if(number < 6){
@@ -111,10 +133,13 @@ function assignNameToField(data, ws, help) {
 /************************** Game Logic Implementation **********************/
 /********* ready Button *************/
 let playerData = {};
-let checked = [];
+let checked = [false, false, false, false, false];
 let playerAmount = 0;
 let readyAmount = 0;
-const readyButton = document.getElementById('ready')
+let playerNumber;
+let gameState = false;
+let currentPlayer;
+
 
 $("#ready").click(function(){
     getPlayerData();
@@ -134,15 +159,24 @@ function readyCheck(){
             readyAmount++;
         }
     }
+
     sendReadyAmountToServer();
     socket.emit('transferReadyAmount');
     socket.emit('refreshButton');
 
     if(playerAmount === readyAmount){
-        startGame();
+        socket.emit('changeState', gameState);
+        socket.emit('getCardDeck');
+        setTimeout(startGame, 100);
+        socket.emit('gameInProgress');
+        socket.emit('getGameInformation');
     }else {
         nameP1.innerHTML = '<p><strong>' + checked + '</strong></p>';
     }
+}
+
+function gameInProgress(){
+    document.getElementById('ready').style.visibility = "hidden";
 }
 
 function getCheckedFromServer(){
@@ -175,28 +209,51 @@ function sendReadyAmountToServer(){
     socket.emit('setReadyAmount', readyAmount);
 }
 
-
-
 let cardDeck;
 let clientDealer;
-
-function createCardDeck(){
-    cardDeck = deck();
-}
+let clientPlayer;
 
 function startGame() {
-    clientDealer = createDealer(cardDeck);
-    clientDealer.Dstart();
+    let a = dealer(cardDeck);
+    cardDeck = a[0];
+    let b = a[1];
+    clientDealer = b[0];
+    let d;
+    let c;
+
+    for(let i = 0; i < 5; i++){
+        if(checked[i] === true){
+            d = spieler(cardDeck);
+            cardDeck = d[0];
+            c = d[1];
+            clientPlayer = c[0];
+            socket.emit('transferHand', clientPlayer, i);
+        }
+    }
+
     socket.emit('transferCardDeck', cardDeck)
     socket.emit('transferDealer', clientDealer);
 }
 
+/************ Ziehen Button **************/
+
+$("#draw").click(function(){
+    if(gameState){
+        socket.emit('getPlayerNumber');
+        setTimeout(drawCard, 100);
+    }
+});
+
+function drawCard(){
+    if(playerNumber === currentPlayer){
+
+    }
+}
+
 /************************* Universal Test Function *******************************/
 
-function test(){
-    cardDeck = deck();
-    const testVar = cardDeck.geben();
-    nameP4.innerHTML = '<p><strong>' + testVar.getCard() + '</strong></p>';
+function test(s){
+    nameP4.innerHTML = '<p><strong>' + s + '</strong></p>';
 }
 
 

@@ -45,7 +45,7 @@ io.on('connection', function (socket) {
 
     socket.on('checked', function(data){
         checked = data;
-        io.sockets.emit('checked', checked);
+        io.sockets.emit('retrieveChecked', checked);
     });
 
     socket.on('getPlayerAmount', function (data){
@@ -77,6 +77,28 @@ io.on('connection', function (socket) {
         dealer = data;
         io.sockets.emit('showDealer', dealer);
     });
+
+    socket.on('getPlayerNumber', function (data){
+        io.sockets.emit('receivePlayer', players[socket.id].playerNumber);
+    });
+
+    socket.on('changeState', function (data){
+        state = !data;
+        io.sockets.emit('changeState');
+    })
+
+    socket.on('gameInProgress', function (data){
+        io.sockets.emit('gameInProgress');
+    })
+
+    socket.on('getGameInformation', function (data){
+        io.sockets.emit('getGameInformation', currentPlayer, checked);
+    })
+
+    socket.on('transferHand', function (data, data2){
+        playerHands[data2] = data;
+        console.log(playerHands);
+    });
 });
 
 
@@ -84,17 +106,24 @@ io.on('connection', (socket) => {
     if(playerAmount === 0){
         io.sockets.emit('createCardDeck');
     }
-
+    if(state){
+        io.sockets.emit('gameInProgress');
+    }
+    if(dealer != null){
+        io.sockets.emit('showDealer', dealer);
+    }
     playerAmount += 1;
     addWS(socket.id);
-
+    io.sockets.emit('getState', state);
     io.sockets.emit('transferReadyAmount', readyAmount);
+
     players[socket.id] = {
         'name': 'enter name here',
         'playerNumber': getPlayerNumber(),
         'handValue': 0,
         'ready' : false,
     }
+
     console.log(players);
 
     socket.on('disconnect', () => {
@@ -129,6 +158,9 @@ let checked = [false, false, false, false, false];
 let playerAmount = 0;
 let readyAmount = 0;
 let dealer;
+let state = false;
+let currentPlayer = 1;
+let playerHands = [0, 0, 0,0 ,0];
 
 function getTime() {
     var today = new Date();

@@ -1,197 +1,173 @@
 /*************************** Functions used in Game.js *******************************/
-function deck(){
-    let Ziehstapel1 = new Ziehstapel();
-    Ziehstapel1.erneuern();
-    return Ziehstapel1;
-}
-
-function createDealer(deck){
-    let dealer1 = new dealer(deck);
-    return dealer1;
-}
 
 /************************* Game Logic *********************************/
-
-
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
-var zeichen = ['Kreuz', 'Pik', 'Herz', 'Karo']
-var besonders = ['Bube', 'Dame', 'König']
-
-function Card(zahl, zeichen2) {
-    this.number;
+/************************* Kartenfunktionen *********************************/
+function getCard(zahl, zeichen2) {
+    let zeichen = ['Kreuz', 'Pik', 'Herz', 'Karo']
+    let besonders = ['Bube', 'Dame', 'König']
+    let karte=[]
     if (zahl < 11) {
         if (zahl === 1) {
-            this.number = 'Ass';
+            karte[0] = 'Ass';
         } else {
-            this.number = zahl;
+            karte[0] = zahl;
         }
     } else {
-        this.number = besonders[zahl - 11];
+        karte[0] = besonders[zahl - 11];
     }
-    this.color = zeichen[zeichen2];
-    this.getCard = function () {
-        const karte1 = this.number + ' ' + this.color + ', ';
-        return karte1;
-    }
-    this.wert = function () {
-        if (zahl < 11) {
-            if (this.number === 'Ass') {
-                return 11;
-            } else {
-                return zahl;
-            }
-        }
-        return 10;
-    }
+    karte[1] = zeichen[zeichen2];
+    return karte;
 }
 
-function Ziehstapel() {
-    this.stapel = [];
-    this.erneuern = function () {
-        const anzahldecks = 6;
-        for (let i = 1; i < 14; i++) {
-            for (let i2 = 0; i2 < 4; i2++) {
-                for (let i3 = 0; i3 < anzahldecks; i3++) {
-                    const card5 = new Card(i, i2);
-                    this.stapel.push(card5);
-                }
-            }
-        }
-    }
-    this.lang = function () {
-        const laenge = this.stapel.length;
-        return laenge;
-    }
-    this.geben = function () {
-        const stelle = getRandomInt(this.stapel.length);
-        const karte = this.stapel.splice(stelle, 1);
-        const mischen = this.leer();
-        if (mischen) {
-            this.erneuern();
-        }
-        return karte[0];
-    }
-    this.leer = function () {
-        if (this.stapel.length === 0) {
-            return true;
-        }
-        return false;
-    }
+/* vermutlich nur für tests kann am ende vermutlich gelöscht werden */
+function getCardgesamt(c){
+    Gesamtekarte=c[0]+' '+c[1]+' ';
+    return Gesamtekarte;
 }
 
-function Hand(s) {
-    this.blatt = [];
-    this.ziehen = function () {
-        const hilf3 = s.geben();
-        this.blatt.push(hilf3);
-    };
-    this.zeigen = function (a) {
-        const c = this.blatt[a];
-        //var string1=c.getCard();
-        return c;//string1;
-    }
-    this.volleHand = function () {
-        let string2 = '';
-        for (let i = 0; i < this.blatt.length; i++) {
-            const c2 = this.blatt[i];
-            string2 = string2.concat(c2.getCard());
+function getCardwert(c){
+    if(c[0]<11){
+        if(c[0]=='Ass'){
+            return 11;
         }
-        return string2;
-    }
-    this.gezogen = function () {
-        const c3 = this.blatt[this.blatt.length - 1];
-        //string3=c3.getCard();
-        return c3; //string3;
-    }
-    this.Handwert = function () {
-        let total = 0;
-        for (let h1 = 0; h1 < this.blatt.length; h1++) {
-            const kartenwert = this.blatt[h1];
-            total += kartenwert.wert();
+        else{
+            return c[0];
         }
-        return total;
     }
-    this.Groß = function () {
-        return this.blatt.length;
-    }
+    return 10;
 }
 
-function dealer(stapel1) {
-    this.dHand = new Hand(stapel1);
-    this.Dstart = function () {
-        this.dHand.ziehen();
+/************************* Ziehstapelfunktionen *********************************/
+function getZiehstapel() {
+    let stapel = [];
+    stapel=Ziehstapelerneuern(stapel);
+    return stapel;
+}
+
+function Ziehstapelgeben (s1) {
+    let stelle = getRandomInt(s1.length);
+    let karte = s1.splice(stelle, 1);
+    if (s1.length===0) {
+        s1=Ziehstapelerneuern(s1);
     }
-    this.Dspiel = function () {
-        while (this.dHand.Handwert() < 17) {
-            this.dHand.ziehen();
-            this.Drettungmöglich()
-        }
-    }
-    this.Drettungmöglich = function () {
-        if (this.dHand.Handwert() > 21) {
-            const anzahl = this.dHand.Groß();
-            for (let ret1 = 0; ret1 < anzahl; ret1++) {
-                const Kriterium1 = this.dHand.zeigen(ret1);
-                const Kriterium2 = Kriterium1.number;
-                if (Kriterium2 == 'Ass') {
-                    this.veringern = true;
-                    Kriterium1.number = 1;
-                    ret1 = anzahl;
-                }
+    let alles=[];
+    alles[0]=s1;
+    alles[1]=karte;
+    return alles;
+}
+
+function Ziehstapelerneuern(s) {
+    let anzahldecks = 6;
+    for (let i = 1; i < 14; i++) {
+        for (let i2 = 0; i2 < 4; i2++) {
+            for (let i3 = 0; i3 < anzahldecks; i3++) {
+                const card5 = getCard(i, i2);
+                s.push(card5);
             }
         }
     }
-    this.Dverloren = function () {
-        return this.dHand.Handwert() >= 22;
-
-    }
-    this.getDhand = function () {
-        return this.dHand;
-    }
+    return s;
 }
 
-function spieler(stapel1) {
-    this.sHand = new Hand(stapel1);
-    this.Sstart = function () {
-        for (let d1 = 0; d1 < 2; d1++) {
-            this.sHand.ziehen();
-        }
+/************************* allgemeine Spielerfunktionen *********************************/
+
+function ziehen(h,s,m) {
+    let gesamt=[]
+    for (let d1 = m; d1 < 2; d1++) {
+        let hilf3 = Ziehstapelgeben(s);
+        h.push(hilf3[1]);
+        s=hilf3[0];
     }
-    this.Sspiel = function () {
-        const spielen = false;//window.prompt('wollen sie eine Karte ziehen?', 'true oder false');
-        do {
-            if (spielen) {
-                this.sHand.ziehen();
-                this.Srettungmöglich();
-            }
-        } while (spielen && this.sHand.Handwert() < 22)
+    gesamt[0]=s;
+    gesamt[1]=h;
+    return gesamt;
+};
+
+/* für tests kann am ende gelöscht werden */
+
+function gesamteHand(h) {
+    let string2 = '';
+    for (let i = 0; i < h.length; i++) {
+        let c2 = h[i];
+        string2 = string2.concat(getCardgesamt(c2));
     }
-    this.Srettungmöglich = function () {
-        if (this.sHand.Handwert() > 21) {
-            const anzahl = this.sHand.Groß();
-            for (let ret1 = 0; ret1 < anzahl; ret1++) {
-                const Kriterium1 = this.sHand.zeigen(ret1);
-                const Kriterium2 = Kriterium1.number;
-                if (Kriterium2 == 'Ass') {
-                    Kriterium1.number = 1;
-                    ret1 = anzahl;
-                }
-            }
-        }
-    }
-    this.Sverloren = function () {
-        if (this.sHand.Handwert() < 22) {
-            return false;
-        }
-        return true;
-    }
-    this.getShand = function () {
-        return this.sHand;
-    }
+    return string2;
 }
+
+function getHandwert(h) {
+    let total = 0;
+    for (let h1 = 0; h1 < h.length; h1++) {
+        let kartenwert = h[h1];
+        total += getCardwert(kartenwert);
+    }
+    return total;
+}
+
+function verloren(h) {
+    return getHandwert(h) >= 22;
+}
+
+
+function rettungmöglich(h) {
+    if (getHandwert(h) > 21) {
+        let anzahl = h.length;
+        for (let ret1 = 0; ret1 < anzahl; ret1++) {
+            let Kriterium1 = h[ret1];
+            let Kriterium2 = Kriterium1[0];
+            if (Kriterium2 == 'Ass') {
+                Kriterium1[0] = 1;
+                h[ret1]=Kriterium1;
+                ret1 = anzahl;
+            }
+        }
+    }
+    return h;
+}
+
+/************************* Dealerfunktionen *********************************/
+
+
+function dealer(s) {
+    let dHandundstapel = [];
+    dHandundstapel=ziehen(dHandundstapel ,s,1)
+    return dHandundstapel;
+}
+
+
+function Dspiel(h,s) {
+    let total=[];
+    while (getHandwert(h) < 17) {
+        total=ziehen(h,s,1);
+        total[1]=rettungmöglich(total[1])
+    }
+    return total;
+}
+
+/************************* Spielerfunktionen *********************************/
+
+function spieler(s) {
+    let sHandundstapel = [];
+    dHandundstapel=ziehen(sHandundstapel,s,2);
+    return sHandundstapel;
+}
+
+
+function Sspiel(h,s) {
+    let total=[];
+    total=ziehen(h,s,1);
+    total[1]=rettungmöglich(total[1])
+    if(getHandwert(total[1]) <= 22){
+        total[2]=true;
+    }else{
+        total[2]=false;
+    }
+    return total;
+}
+
 
 function Blackjack(mitspielen, liste) {
     this.Dealer1 = new dealer(liste);
@@ -244,3 +220,4 @@ function Blackjack(mitspielen, liste) {
         console.log(Ergebnis);
     }
 }
+
