@@ -93,17 +93,34 @@ io.on('connection', function (socket) {
     })
 
     socket.on('getGameInformation', function (data){
-        io.sockets.emit('getGameInformation', currentPlayer, checked);
+        getLastPlayer();
+        currentPlayer += 1;
+        io.sockets.emit('getGameInformation', currentPlayer, checked, lastPlayer);
     })
 
     socket.on('transferHand', function (data, data2){
         playerHands[data2] = data;
         console.log(playerHands);
-        io.sockets.emit('updatePlayers', players, ws, help, playerHands);
+        console.log(playerHands[data2]);
+        io.sockets.emit('updateplayers', players, ws, help, playerHands);
     });
 
-    socket.on('updatePlayers', function (data){
-        io.sockets.emit('updatePlayers', players, ws, help, playerHands);
+    socket.on('updateplayers', function (data){
+        io.sockets.emit('updateplayers', players, ws, help, playerHands);
+    })
+
+    socket.on('getHands', function (data){
+        io.sockets.emit('getHands', playerHands)
+    })
+
+    socket.on('updateHands', function (data){
+        playerHands = data;
+        console.log(playerHands);
+        io.sockets.emit('updateplayers', players, ws, help, playerHands)
+    })
+
+    socket.on('getDealer', function (data){
+        io.sockets.emit('showDealer', dealer);
     });
 });
 
@@ -111,20 +128,23 @@ io.on('connection', function (socket) {
 io.on('connection', (socket) => {
     if(playerAmount === 0){
         io.sockets.emit('createCardDeck');
+        console.log(cardDeck);
     }
     if(state){
         io.sockets.emit('gameInProgress');
     }
-    if(dealer !== null){
+    if(dealer != null){
         io.sockets.emit('showDealer', dealer);
     }
+    io.sockets.emit('updateplayers', players, ws, help, playerHands);
+    io.sockets.emit('getGameInformation', currentPlayer, checked);
     playerAmount += 1;
     addWS(socket.id);
-    io.sockets.emit('updatePlayers', players, ws, help, playerHands);
     io.sockets.emit('getState', state);
     io.sockets.emit('transferReadyAmount', readyAmount);
+
     players[socket.id] = {
-        'name': 'enter name here',
+        'name': '',
         'playerNumber': getPlayerNumber(),
         'handValue': 0,
         'ready' : false,
@@ -165,8 +185,20 @@ let playerAmount = 0;
 let readyAmount = 0;
 let dealer;
 let state = false;
-let currentPlayer = 1;
+let currentPlayer = 0;
 let playerHands = [false, false, false, false, false];
+let lastPlayer;
+
+
+function getLastPlayer(){
+    let x = 0;
+    for(let i = 0; i < checked.length; i++){
+        if(checked[i] === true){
+            x = i;
+        }
+    }
+    lastPlayer = x + 1;
+}
 
 function getTime() {
     var today = new Date();

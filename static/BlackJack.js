@@ -30,15 +30,14 @@ function getCardgesamt(c){
 }
 
 function getCardwert(c){
-    if(c[0]<11){
-        if(c[0]=='Ass'){
-            return 11;
-        }
-        else{
-            return c[0];
-        }
+    let besonders = ['Bube', 'Dame', 'König']
+    if(c[0] === 'Ass'){
+        return 11;
     }
-    return 10;
+    if(c[0]=== besonders[0] || c[0]=== besonders[1] || c[0]=== besonders[2]){
+        return 10;
+    }
+    return c[0];
 }
 
 /************************* Ziehstapelfunktionen *********************************/
@@ -118,7 +117,7 @@ function rettungmöglich(h) {
         for (let ret1 = 0; ret1 < anzahl; ret1++) {
             let Kriterium1 = h[ret1];
             let Kriterium2 = Kriterium1[0];
-            if (Kriterium2 == 'Ass') {
+            if (Kriterium2 === 'Ass') {
                 Kriterium1[0] = 1;
                 h[ret1]=Kriterium1;
                 ret1 = anzahl;
@@ -139,9 +138,9 @@ function dealer(s) {
 
 
 function Dspiel(h,s) {
-    let total=[];
-    while (getHandwert(h) < 17) {
-        total=ziehen(h,s,1);
+    let total=[s,h];
+    while (getHandwert(total[1]) < 17) {
+        total=ziehen(total[1],total[0],1);
         total[1]=rettungmöglich(total[1])
     }
     return total;

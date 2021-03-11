@@ -5,26 +5,3 @@ karten1[]
 [[karten1[]]], [karten2[]]
 [[[karten1[]]], [karten2[]]]
 [[karten1[]]], [karten2[]]
-
-
-for(let i = 0; i < 5; i++){
-        if(s[i] !== false){
-            switch (i) {
-                case 0:
-                    nameP1.innerHTML += '<p>'+'<br>' + gesamteHand(s[i]) + '</p>';
-                    break;
-                case 1:
-                    nameP2.innerHTML += '<p>'+'<br>' + gesamteHand(s[i]) + '</p>';
-                    break;
-                case 2:
-                    nameP3.innerHTML += '<p>'+'<br>' + gesamteHand(s[i]) + '</p>';
-                    break;
-                case 3:
-                    nameP4.innerHTML += '<p>'+'<br>' + gesamteHand(s[i]) + '</p>';
-                    break;
-                case 4:
-                    nameP5.innerHTML += '<p>'+'<br>' + gesamteHand(s[i]) + '</p>';
-                    break;
-            }
-        }
-    }
