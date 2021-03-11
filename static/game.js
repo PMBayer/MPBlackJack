@@ -18,65 +18,73 @@ function emitUsername() {
     });
 }
 
-function getPlayerData(){
+function getPlayerData() {
     socket.emit('playerData');
-    socket.on('playerData', function(data){
+    socket.on('playerData', function (data) {
         playerData = data;
     })
 }
 
 /*********************** Listen for Events ******************************/
 
-socket.on('username', function (data, ws, help) {
-    assignNameToField(data, ws, help);
+socket.on('username', function (data, ws, help, s) {
+    updatePlayers(data, ws, help, s);
 });
 
-socket.on('refresh', function (number){
-   clearNameField(number);
+socket.on('refresh', function (number) {
+    clearNameField(number);
 });
 
-socket.on('refreshButton', function (data){
+socket.on('refreshButton', function (data) {
     nameP5.innerHTML = '<p><strong>' + 'hallo' + '</strong></p>';
     setTimeout(setReadyButton, 100);
 })
 
-socket.on('getCardDeck', function (data){
+socket.on('getCardDeck', function (data) {
     cardDeck = data;
 });
 
-socket.on('createCardDeck', function (data){
+socket.on('createCardDeck', function (data) {
     cardDeck = getZiehstapel();
     socket.emit('transferCardDeck', cardDeck);
 });
 
-socket.on('showDealer', function (data){
+socket.on('showDealer', function (data) {
     clientDealer = data;
-    dealerText.innerHTML +='<br>' + gesamteHand(clientDealer);
+    dealerText.innerHTML += '<br>' + gesamteHand(clientDealer);
 });
 
-socket.on('receivePlayer', function (data){
+socket.on('receivePlayer', function (data) {
     playerNumber = data;
 });
 
-socket.on('changeState', function (data){
+socket.on('changeState', function (data) {
     gameState = !gameState;
 });
 
-socket.on('getState', function (data){
+socket.on('getState', function (data) {
     gameState = data;
 })
 
-socket.on('gameInProgress', function (data){
+socket.on('gameInProgress', function (data) {
     gameInProgress();
 })
 
-socket.on('getGameInformation', function (data, data2){
+socket.on('getGameInformation', function (data, data2) {
     currentPlayer = data;
     checked = data2;
 });
 
-function clearNameField(number){
-    if(number < 6){
+socket.on('updatePlayers', function (data1, data2, data3, data4) {
+    updatePlayers(data1, data2, data3, data4);
+});
+
+socket.on('transferReadyAmount', function (data) {
+    readyAmount = data
+});
+
+function clearNameField(number) {
+    if (number < 6) {
         switch (number) {
             case 1:
                 nameP1.innerHTML = '<p><strong>' + '' + '</strong></p>';
@@ -99,15 +107,16 @@ function clearNameField(number){
     setTimeout(setReadyButton, 100);
 }
 
-function assignNameToField(data, ws, help) {
-    for(let i = 0; i < ws.length; i++){
+function updatePlayers(data, ws, help, s) {
+    test(s);
+    for (let i = 0; i < ws.length; i++) {
         let notEmpty = true;
-        for(let j = 0; j < help.length; j++){
-            if(help[j] === i+1){
+        for (let j = 0; j < help.length; j++) {
+            if (help[j] === i + 1) {
                 notEmpty = false;
             }
         }
-        if(notEmpty){
+        if (notEmpty) {
             switch (data[ws[i]].playerNumber) {
                 case 1:
                     nameP1.innerHTML = '<p><strong>' + data[ws[i]].name + '</strong></p>';
@@ -125,14 +134,37 @@ function assignNameToField(data, ws, help) {
                     nameP5.innerHTML = '<p><strong>' + data[ws[i]].name + '</strong></p>';
                     break;
             }
+            updatePlayers2(s, i);
         }
     }
     getPlayerAmount();
     setTimeout(setReadyButton, 100);
 }
 
+function updatePlayers2(s, i) {
+    if (s[i] !== false) {
+        switch (i) {
+            case 0:
+                nameP1.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                break;
+            case 1:
+                nameP2.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                break;
+            case 2:
+                nameP3.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                break;
+            case 3:
+                nameP4.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                break;
+            case 4:
+                nameP5.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                break;
+        }
+    }
+}
+
 /************************** Game Logic Implementation **********************/
-/********* ready Button *************/
+/********* Global Var *************/
 let playerData = {};
 let checked = [false, false, false, false, false];
 let playerAmount = 0;
@@ -140,23 +172,26 @@ let readyAmount = 0;
 let playerNumber;
 let gameState = false;
 let currentPlayer;
+let cardDeck;
+let clientDealer;
+let clientPlayer;
+/********* ready Button *************/
 
-
-$("#ready").click(function(){
+$("#ready").click(function () {
     getPlayerData();
     getCheckedFromServer();
     getPlayerAmount();
     setTimeout(readyCheck, 100);
 });
 
-function readyCheck(){
-    if(playerData.playerNumber < 6){
-        checked[playerData.playerNumber-1] = !checked[playerData.playerNumber-1];
+function readyCheck() {
+    if (playerData.playerNumber < 6) {
+        checked[playerData.playerNumber - 1] = !checked[playerData.playerNumber - 1];
     }
     socket.emit('checked', checked);
     readyAmount = 0;
-    for(let i = 0; i < 5; i++){
-        if(checked[i] === true){
+    for (let i = 0; i < 5; i++) {
+        if (checked[i] === true) {
             readyAmount++;
         }
     }
@@ -165,54 +200,46 @@ function readyCheck(){
     socket.emit('transferReadyAmount');
     socket.emit('refreshButton');
 
-    if(playerAmount === readyAmount){
+    if (playerAmount === readyAmount) {
         socket.emit('changeState', gameState);
         socket.emit('getCardDeck');
         setTimeout(startGame, 100);
         socket.emit('gameInProgress');
         socket.emit('getGameInformation');
-    }else {
+    } else {
         nameP1.innerHTML = '<p><strong>' + checked + '</strong></p>';
     }
 }
 
-function gameInProgress(){
+function gameInProgress() {
     document.getElementById('ready').style.visibility = "hidden";
 }
 
-function getCheckedFromServer(){
+function getCheckedFromServer() {
     socket.emit('retrieveChecked');
-    socket.on('retrieveChecked', function (data){
+    socket.on('retrieveChecked', function (data) {
         checked = data;
     });
 }
 
-function getPlayerAmount(){
+function getPlayerAmount() {
     socket.emit('getPlayerAmount');
-    socket.on('playerAmount', function(data){
-        if(data > 5){
+    socket.on('playerAmount', function (data) {
+        if (data > 5) {
             playerAmount = 5;
-        }else{
+        } else {
             playerAmount = data;
         }
     })
 }
 
-function setReadyButton(){
+function setReadyButton() {
     readyButton.innerHTML = "Bereit (" + readyAmount + "/" + playerAmount + ")";
 }
 
-socket.on('transferReadyAmount', function (data){
-    readyAmount = data
-});
-
-function sendReadyAmountToServer(){
+function sendReadyAmountToServer() {
     socket.emit('setReadyAmount', readyAmount);
 }
-
-let cardDeck;
-let clientDealer;
-let clientPlayer;
 
 function startGame() {
     let a = dealer(cardDeck);
@@ -221,12 +248,12 @@ function startGame() {
     let d;
     let c;
 
-    for(let i = 0; i < 5; i++){
-        if(checked[i] === true){
+    for (let i = 0; i < 5; i++) {
+        if (checked[i] === true) {
             d = spieler(cardDeck);
             cardDeck = d[0];
             clientPlayer = d[1];
-            test(d[1])
+            //test(d[1])
             socket.emit('transferHand', clientPlayer, i);
         }
     }
@@ -237,22 +264,22 @@ function startGame() {
 
 /************ Ziehen Button **************/
 
-$("#draw").click(function(){
-    if(gameState){
+$("#draw").click(function () {
+    if (gameState) {
         socket.emit('getPlayerNumber');
         setTimeout(drawCard, 100);
     }
 });
 
-function drawCard(){
-    if(playerNumber === currentPlayer){
+function drawCard() {
+    if (playerNumber === currentPlayer) {
 
     }
 }
 
 /************************* Universal Test Function *******************************/
 
-function test(s){
+function test(s) {
     nameP4.innerHTML = '<p><strong>' + s + '</strong></p>';
 }
 

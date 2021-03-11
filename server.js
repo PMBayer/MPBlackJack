@@ -32,7 +32,7 @@ io.on('connection', function (socket) {
     socket.on('username', function (data) {
         players[socket.id].name = data.username;
         console.log(players);
-        io.sockets.emit('username', players, ws, help);
+        io.sockets.emit('username', players, ws, help, playerHands);
     });
 
     socket.on('playerData', function (data){
@@ -99,6 +99,11 @@ io.on('connection', function (socket) {
     socket.on('transferHand', function (data, data2){
         playerHands[data2] = data;
         console.log(playerHands);
+        io.sockets.emit('updatePlayers', players, ws, help, playerHands);
+    });
+
+    socket.on('updatePlayers', function (data){
+        io.sockets.emit('updatePlayers', players, ws, help, playerHands);
     });
 });
 
@@ -110,14 +115,14 @@ io.on('connection', (socket) => {
     if(state){
         io.sockets.emit('gameInProgress');
     }
-    if(dealer != null){
+    if(dealer !== null){
         io.sockets.emit('showDealer', dealer);
     }
     playerAmount += 1;
     addWS(socket.id);
+    io.sockets.emit('updatePlayers', players, ws, help, playerHands);
     io.sockets.emit('getState', state);
     io.sockets.emit('transferReadyAmount', readyAmount);
-
     players[socket.id] = {
         'name': 'enter name here',
         'playerNumber': getPlayerNumber(),
