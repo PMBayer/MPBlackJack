@@ -101,7 +101,7 @@ function getHandwert(h) {
     let total = 0;
     for (let h1 = 0; h1 < h.length; h1++) {
         let kartenwert = h[h1];
-        total += getCardwert(kartenwert);
+        total += getCardwert(kartenwert[0]);
     }
     return total;
 }
@@ -117,8 +117,10 @@ function rettungmöglich(h) {
         for (let ret1 = 0; ret1 < anzahl; ret1++) {
             let Kriterium1 = h[ret1];
             let Kriterium2 = Kriterium1[0];
-            if (Kriterium2 === 'Ass') {
-                Kriterium1[0] = 1;
+            let kriterium3 = Kriterium2[0];
+            if (kriterium3 === 'Ass') {
+                Kriterium2[0] = 1;
+                Kriterium1[0] = Kriterium2;
                 h[ret1]=Kriterium1;
                 ret1 = anzahl;
             }

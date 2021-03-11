@@ -311,8 +311,7 @@ function stand(){
 }
 
 function playersFinished(){
-    if(currentPlayer === lastPlayer){
-        test(lastPlayer)
+    if(currentPlayer-1 === lastPlayer){
         let x = Dspiel(clientDealer, cardDeck);
         socket.emit('transferCardDeck', x[0]);
         socket.emit('transferDealer', x[1]);
