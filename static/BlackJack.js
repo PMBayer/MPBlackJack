@@ -25,8 +25,7 @@ function getCard(zahl, zeichen2) {
 
 /* vermutlich nur für tests kann am ende vermutlich gelöscht werden */
 function getCardgesamt(c){
-    let Gesamtekarte=c[0]+' ';
-    return Gesamtekarte;
+    return c[0]+' ';
 }
 
 function getCardwert(c){
@@ -84,7 +83,7 @@ function ziehen(h,s,m) {
     gesamt[0]=s;
     gesamt[1]=h;
     return gesamt;
-};
+}
 
 /* für tests kann am ende gelöscht werden */
 
@@ -111,7 +110,7 @@ function verloren(h) {
 }
 
 
-function rettungmöglich(h) {
+function rescuePossible(h) {
     if (getHandwert(h) > 21) {
         let anzahl = h.length;
         for (let ret1 = 0; ret1 < anzahl; ret1++) {
@@ -143,7 +142,7 @@ function Dspiel(h,s) {
     let total=[s,h];
     while (getHandwert(total[1]) < 17) {
         total=ziehen(total[1],total[0],1);
-        total[1]=rettungmöglich(total[1])
+        total[1]=rescuePossible(total[1])
     }
     return total;
 }
@@ -158,9 +157,9 @@ function spieler(s) {
 
 
 function Sspiel(h,s) {
-    let total=[];
+    let total;
     total=ziehen(h,s,1);
-    total[1]=rettungmöglich(total[1])
+    total[1]=rescuePossible(total[1])
     if(getHandwert(total[1]) <= 22){
         total[2]=true;
     }else{
@@ -177,7 +176,7 @@ function Blackjack(mitspielen, liste) {
         this.Dealer1.Dstart();
         for (let Spielermenge = 0; Spielermenge < mitspielen.length; Spielermenge++) {
             if (mitspielen[Spielermenge]) {
-                var Spieler1 = new spieler(liste);
+                let Spieler1 = new spieler(liste);
                 Spieler1.Sstart();
                 this.Spielerliste.push(Spieler1)
             }
@@ -196,13 +195,13 @@ function Blackjack(mitspielen, liste) {
             const hilfe3 = hilfe2.getShand();
             console.log(hilfe3);
         }
-        var hilfe4 = this.Dealer1.getDhand();
+        const hilfe4 = this.Dealer1.getDhand();
         console.log(hilfe4);
     }
     this.verloren = function (s1) {
-        var hilfe5 = s1.getShand();
-        var hilfe6 = s1.Sverloren();
-        var hilfe7 = this.Dealer1.getDhand();
+        let hilfe5 = s1.getShand();
+        let hilfe6 = s1.Sverloren();
+        let hilfe7 = this.Dealer1.getDhand();
         if (hilfe5.Handwert() == hilfe7.Handwert) {
             return 'unentschieden'
         }

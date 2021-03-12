@@ -27,7 +27,7 @@ function getPlayerData(){
 
 /*********************** Listen for Events ******************************/
 socket.on('username', function (data, ws, help,s) {
-   updateplayers(data, ws, help,s);
+   updatePlayers(data, ws, help,s);
 });
 
 socket.on('refresh', function (number){
@@ -36,7 +36,7 @@ socket.on('refresh', function (number){
 
 socket.on('refreshButton', function (data){
     setTimeout(setReadyButton, 100);
-})
+});
 
 socket.on('getCardDeck', function (data){
     cardDeck = data;
@@ -62,11 +62,11 @@ socket.on('changeState', function (data){
 
 socket.on('getState', function (data){
     gameState = data;
-})
+});
 
 socket.on('gameInProgress', function (data){
     gameInProgress();
-})
+});
 
 socket.on('getGameInformation', function (data, data2, data3){
     currentPlayer = data;
@@ -75,7 +75,7 @@ socket.on('getGameInformation', function (data, data2, data3){
 });
 
 socket.on('updateplayers', function (data, data2, data3, data4){
-    updateplayers(data, data2, data3, data4);
+    updatePlayers(data, data2, data3, data4);
 });
 
 socket.on('transferReadyAmount', function (data){
@@ -115,7 +115,7 @@ function clearNameField(number){
     setTimeout(setReadyButton, 100);
 }
 
-function updateplayers(data, ws, help,s) {
+function updatePlayers(data, ws, help, s) {
     for(let i = 0; i < ws.length; i++){
         let notEmpty = true;
         for(let j = 0; j < help.length; j++){
@@ -141,7 +141,7 @@ function updateplayers(data, ws, help,s) {
                     nameP5.innerHTML = '<p><strong>' + data[ws[i]].name + '</strong></p>';
                     break;
             }
-            updateplayers2(s,i);
+            updatePlayers2(s,i);
 
         }
     }
@@ -149,7 +149,7 @@ function updateplayers(data, ws, help,s) {
     setTimeout(setReadyButton, 100);
 }
 
-function updateplayers2(s,i){
+function updatePlayers2(s,i){
     if(s[i]!== false){
         switch (i) {
             case 0:
@@ -172,7 +172,7 @@ function updateplayers2(s,i){
 }
 
 /************************** Game Logic Implementation **********************/
-/********* ready Button *************/
+/********* Global Var *************/
 let playerData = {};
 let checked = [false, false, false, false, false];
 let playerAmount = 0;
@@ -186,6 +186,7 @@ let clientPlayer;
 let hands;
 let lastPlayer;
 
+/********* ready Button *************/
 
 $("#ready").click(function(){
     getPlayerData();
@@ -277,7 +278,6 @@ $("#draw").click(function(){
 
 function drawCard(){
     if(playerNumber === currentPlayer){
-        //test("läuft!")
         socket.emit('getHands');
         setTimeout(draw, 100);
     }
