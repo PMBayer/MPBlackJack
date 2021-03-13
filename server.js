@@ -66,7 +66,7 @@ io.on('connection', function (socket) {
 
     socket.on('transferCardDeck', function (data){
         cardDeck = data;
-        console.log(cardDeck);
+        //console.log(cardDeck);
     })
 
     socket.on('getCardDeck', function (data){
@@ -122,13 +122,29 @@ io.on('connection', function (socket) {
     socket.on('getDealer', function (data){
         io.sockets.emit('showDealer', dealer);
     });
+
+    socket.on('restart', (data) => {
+        restart();
+    })
+
+    socket.on('sendResult', (data1, data2) => {
+        console.log(data1);
+        console.log(data2);
+        result[data1] = data2;
+
+    })
+
+    socket.on('getResult', (data) => {
+        console.log(result);
+        io.sockets.emit('getResult', result, dealer);
+    });
 });
 
 
 io.on('connection', (socket) => {
     if(playerAmount === 0){
         io.sockets.emit('createCardDeck');
-        console.log(cardDeck);
+        //console.log(cardDeck);
     }
     if(state){
         io.sockets.emit('gameInProgress');
@@ -154,7 +170,23 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         playerAmount -= 1;
+
+        if(playerAmount === 0){
+            restart();
+        }
+
+        if(players[socket.id].playerNumber === currentPlayer){
+            getLastPlayer();
+            currentPlayer += 1;
+            io.sockets.emit('getGameInformation', currentPlayer, checked, lastPlayer);
+            io.sockets.emit('playerLeft', currentPlayer-1);
+            if(currentPlayer > lastPlayer){
+                io.sockets.emit('endRound');
+            }
+        }
+
         console.log('Player ' + players[socket.id].name + ' disconnected at: ' + getTime());
+
         if (ws.length > 5) {
             decMaxPlayer2(players[socket.id].playerNumber);
             removeWS2(ws[players[socket.id].playerNumber - 1]);
@@ -171,14 +203,13 @@ io.on('connection', (socket) => {
         io.sockets.emit('refresh', players[socket.id].playerNumber);
 
         delete players[socket.id];
-        io.sockets.emit('username', players, ws, help);
+        io.sockets.emit('updateplayers', players, ws, help, playerHands);
         console.log(ws);
         console.log(players);
     })
 });
 
 /********************************************************************************************************************/
-
 let cardDeck;
 let checked = [false, false, false, false, false];
 let playerAmount = 0;
@@ -188,7 +219,23 @@ let state = false;
 let currentPlayer = 0;
 let playerHands = [false, false, false, false, false];
 let lastPlayer;
+let result = [null, null, null, null, null];
 
+function restart(){
+    result = [null, null, null, null, null];
+    checked = [false, false, false, false, false];
+    state = false;
+    readyAmount = 0;
+    dealer = [];
+    currentPlayer = 0;
+    playerHands = [false, false, false, false, false];
+    io.sockets.emit('reset', result);
+    io.sockets.emit('changeState');
+    io.sockets.emit('updateplayers', players, ws, help, playerHands);
+    io.sockets.emit('updateButton', readyAmount, playerAmount);
+    io.sockets.emit('showDealer', dealer);
+
+}
 
 function getLastPlayer(){
     let x = 0;

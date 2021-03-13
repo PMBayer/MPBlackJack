@@ -1,5 +1,3 @@
-/*************************** Functions used in Game.js *******************************/
-
 /************************* Game Logic *********************************/
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
