@@ -116,6 +116,15 @@
     bottom: 0px;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%)
+}
 
+.stack
+{
+    height: 100%;
+    width: 10%;
+    border-style:solid;
+    border-color: #000000;
+    margin-left: 8%;
+    float: left;
 }
 

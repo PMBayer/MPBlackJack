@@ -27,69 +27,69 @@ function getPlayerData() {
 
 /*********************** Listen for Events ******************************/
 
-socket.on('username', function (data, ws, help, s) {
+socket.on('username', (data, ws, help, s) => {
     updatePlayers(data, ws, help, s);
 });
 
-socket.on('refresh', function (number) {
+socket.on('refresh', (number) => {
     clearNameField(number);
 });
 
-socket.on('refreshButton', function (data) {
+socket.on('refreshButton', (data) => {
     setTimeout(setReadyButton, 100);
 });
 
-socket.on('getCardDeck', function (data) {
+socket.on('getCardDeck', (data) => {
     cardDeck = data;
 });
 
-socket.on('createCardDeck', function (data) {
+socket.on('createCardDeck', (data) => {
     cardDeck = getZiehstapel();
     socket.emit('transferCardDeck', cardDeck);
 });
 
-socket.on('showDealer', function (data) {
+socket.on('showDealer', (data) => {
     clientDealer = data;
     dealerText.innerHTML = '<br>' + gesamteHand(clientDealer);
 });
 
-socket.on('receivePlayer', function (data) {
+socket.on('receivePlayer', (data) => {
     playerNumber = data;
 });
 
-socket.on('changeState', function (data) {
+socket.on('changeState', (data) => {
     gameState = !gameState;
 });
 
-socket.on('getState', function (data) {
+socket.on('getState', (data) => {
     gameState = data;
 });
 
-socket.on('gameInProgress', function (data) {
+socket.on('gameInProgress', (data) => {
     gameInProgress();
 });
 
-socket.on('getGameInformation', function (data, data2, data3) {
+socket.on('getGameInformation', (data, data2, data3) => {
     currentPlayer = data;
     checked = data2;
     lastPlayer = data3;
     socket.emit('updateplayers');
 });
 
-socket.on('updateplayers', function (data, data2, data3, data4) {
+socket.on('updateplayers', (data, data2, data3, data4) => {
     updatePlayers(data, data2, data3, data4);
     setTimeout(correction, 300);
 });
 
-socket.on('transferReadyAmount', function (data) {
+socket.on('transferReadyAmount', (data) => {
     readyAmount = data
 });
 
-socket.on('retrieveChecked', function (data) {
+socket.on('retrieveChecked', (data) => {
     checked = data;
 });
 
-socket.on('getHands', function (data) {
+socket.on('getHands', (data) => {
     hands = data;
     socket.emit('getCardDeck');
 });
@@ -360,20 +360,18 @@ function stand() {
     }
     socket.emit('getDealer');
     socket.emit('getCardDeck');
-    if (currentPlayer === lastPlayer) {
+    if (playerNumber === lastPlayer && currentPlayer === lastPlayer) {
         setTimeout(playersFinished, 100);
     }
 }
 
 function playersFinished() {
-
         let x = Dspiel(clientDealer, cardDeck);
         socket.emit('transferCardDeck', x[0]);
         socket.emit('transferDealer', x[1]);
-        setTimeout(restart, 10000);
+        //setTimeout(restart, 10000);
+        restart();
         socket.emit('getResult');
-
-
 }
 
 function restart() {
@@ -403,6 +401,9 @@ function setPlayerBorder(a, b) {
 function correction(){
     if(gameState){
         if(checked[currentPlayer-1] === false){
+            checked[currentPlayer-1] = true;
+            getCheckedFromServer();
+            currentPlayer = 10;
             socket.emit('getGameInformation');
         }
     }

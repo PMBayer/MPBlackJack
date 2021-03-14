@@ -26,105 +26,105 @@ server.listen(5000, function () {
 });
 
 //Add WebSocket handlers
-io.on('connection', function (socket) {
+io.on('connection', (socket) => {
     console.log('made socket connection at: ' + getTime());
 
-    socket.on('username', function (data) {
+    socket.on('username', (data) => {
         players[socket.id].name = data.username;
         console.log(players);
         io.sockets.emit('username', players, ws, help, playerHands);
     });
 
-    socket.on('playerData', function (data){
+    socket.on('playerData', (data) => {
         io.sockets.emit('playerData', players[socket.id]);
     });
 
-    socket.on('retrieveChecked', function (data){
+    socket.on('retrieveChecked', (data) => {
         io.sockets.emit('retrieveChecked', checked);
     });
 
-    socket.on('checked', function(data){
+    socket.on('checked', (data) => {
         checked = data;
         io.sockets.emit('retrieveChecked', checked);
     });
 
-    socket.on('getPlayerAmount', function (data){
+    socket.on('getPlayerAmount', (data) => {
         io.sockets.emit('playerAmount', playerAmount);
     });
 
-    socket.on('setReadyAmount', function (data){
+    socket.on('setReadyAmount', (data) => {
         readyAmount = data;
     });
 
-    socket.on('refreshButton', function(data){
+    socket.on('refreshButton', (data) => {
         io.sockets.emit('refreshButton', 1);
     });
 
-    socket.on('transferReadyAmount', function (data){
+    socket.on('transferReadyAmount', (data) => {
         io.sockets.emit('transferReadyAmount', readyAmount);
     });
 
-    socket.on('transferCardDeck', function (data){
+    socket.on('transferCardDeck', (data) => {
         cardDeck = data;
         //console.log(cardDeck);
     })
 
-    socket.on('getCardDeck', function (data){
+    socket.on('getCardDeck', (data) => {
         io.sockets.emit('getCardDeck', cardDeck);
     });
 
-    socket.on('transferDealer', function (data){
+    socket.on('transferDealer', (data) => {
         dealer = data;
         console.log(dealer);
         io.sockets.emit('showDealer', dealer);
     });
 
-    socket.on('getPlayerNumber', function (data){
+    socket.on('getPlayerNumber', (data) =>{
         io.sockets.emit('receivePlayer', players[socket.id].playerNumber);
     });
 
-    socket.on('changeState', function (data){
+    socket.on('changeState', (data) =>{
         state = !data;
         io.sockets.emit('changeState');
     })
 
-    socket.on('gameInProgress', function (data){
+    socket.on('gameInProgress', (data) => {
         io.sockets.emit('gameInProgress');
     })
 
-    socket.on('getGameInformation', function (data){
+    socket.on('getGameInformation', (data) => {
         getLastPlayer();
         currentPlayer += 1;
         io.sockets.emit('getGameInformation', currentPlayer, checked, lastPlayer);
     })
 
-    socket.on('transferHand', function (data, data2){
+    socket.on('transferHand', (data, data2) => {
         playerHands[data2] = data;
         console.log(playerHands);
         console.log(playerHands[data2]);
         io.sockets.emit('updateplayers', players, ws, help, playerHands);
     });
 
-    socket.on('updateplayers', function (data){
+    socket.on('updateplayers', (data) => {
         io.sockets.emit('updateplayers', players, ws, help, playerHands);
     })
 
-    socket.on('getHands', function (data){
+    socket.on('getHands', (data) => {
         io.sockets.emit('getHands', playerHands)
     })
 
-    socket.on('updateHands', function (data){
+    socket.on('updateHands', (data) => {
         playerHands = data;
         console.log(playerHands);
         io.sockets.emit('updateplayers', players, ws, help, playerHands)
     })
 
-    socket.on('getDealer', function (data){
+    socket.on('getDealer', (data) => {
         io.sockets.emit('showDealer', dealer);
     });
 
     socket.on('restart', (data) => {
-        restart();
+        setTimeout(restart, 10000);
     })
 
     socket.on('sendResult', (data1, data2) => {
@@ -193,12 +193,19 @@ io.on('connection', (socket) => {
         } else {
             decMaxPlayer1(players[socket.id].playerNumber);
         }
+
         if(players[socket.id].playerNumber < 6){
             if(checked[players[socket.id].playerNumber -1] === true){
                 readyAmount -= 1;
             }
             checked[players[socket.id].playerNumber - 1] = false;
         }
+
+        if(players[socket.id].playerNumber < 6){
+            playerHands[players[socket.id].playerNumber -1] = false;
+            io.sockets.emit('playerLeft', players[socket.id].playerNumber);
+        }
+
         io.sockets.emit('transferReadyAmount', readyAmount);
         io.sockets.emit('refresh', players[socket.id].playerNumber);
 
