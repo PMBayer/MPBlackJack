@@ -8,6 +8,8 @@ const nameP4 = document.getElementById('nameP4');
 const nameP5 = document.getElementById('nameP5');
 const dealerText = document.getElementById('dealerID');
 const readyButton = document.getElementById('ready');
+const stacktext = document.getElementById('stacktext');
+const stack = document.getElementById('stack');
 
 
 /************************ Emit Events ***********************************/
@@ -411,9 +413,11 @@ function correction(){
 
 /************************* Universal Test Function *******************************/
 
-function test(s) {
-    nameP4.innerHTML += '<p><strong>' + '<br>' + s + '</strong></p>';
-}
+$("#stack").mouseenter(function(){
+    stack.title = "Karten im Stapel: " + cardDeck.length;
+});
+
+
 
 
 
