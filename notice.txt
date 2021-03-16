@@ -1,7 +1,0 @@
-karten1[]
-[karten1[]]
-[[karten1[]], karten2[]]
-[[karten1[]], karten2[]]
-[[karten1[]]], [karten2[]]
-[[[karten1[]]], [karten2[]]]
-[[karten1[]]], [karten2[]]
