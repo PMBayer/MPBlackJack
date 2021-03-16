@@ -227,6 +227,11 @@ let currentPlayer = 0;
 let playerHands = [false, false, false, false, false];
 let lastPlayer;
 let result = [null, null, null, null, null];
+const players = {};
+let ws = [];
+let maxPlayer = 0;
+const help = [];
+let u = false;
 
 function restart(){
     result = [null, null, null, null, null];
@@ -260,9 +265,6 @@ function getTime() {
     return time;
 }
 
-const players = {};
-let ws = [];
-
 function addWS(x) {
     if(help.length === 0){
         ws.push(x);
@@ -277,8 +279,6 @@ function addWS(x) {
     }
 
 }
-
-let maxPlayer = 0;
 
 function getPlayerNumber() {
     if (help.length === 0) {
@@ -324,14 +324,11 @@ function decMaxPlayer2(x) {
     }
 }
 
-const help = [];
-
 function decMaxPlayer1(x) {
     help.push(x);
     removeWS1(x);
 }
 
-let u = false;
 function removeWS2(x) {
     const index = ws.indexOf(x);
     if (u) {
