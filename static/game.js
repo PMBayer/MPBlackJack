@@ -96,7 +96,7 @@ socket.on('getHands', function (data){
 });
 
 socket.on('reset', function (data){
-    ergebnis = data;
+    result = data;
 });
 
 socket.on('endround', function (data){
@@ -104,7 +104,7 @@ socket.on('endround', function (data){
 });
 
 socket.on('leaved', function (data){
-    document.getElementById(rahmen[data-1]).style.borderColor='black';
+    document.getElementById(border[data-1]).style.borderColor='black';
 });
 
 socket.on('startcountdown', function (data){
@@ -119,18 +119,18 @@ socket.on('getergebnis', function (data,data2){
 
         if(data[i]!=null){
         if(data[i]>21){
-            ergebnis[i]=false;
+            result[i]=false;
         }else{
             if(verloren(data2)){
-                ergebnis[i]=true
+                result[i]=true
             }else{
                 if(data[i]>getHandwert(data2)){
-                    ergebnis[i]=true
+                    result[i]=true
                 }else{
                     if(data[i]===getHandwert(data2)){
-                        ergebnis[i]="tie";
+                        result[i]="tie";
                     }else{
-                        ergebnis[i]=false;
+                        result[i]=false;
                     }
                 }
             }
@@ -245,8 +245,8 @@ let clientDealer;
 let clientPlayer;
 let hands;
 let lastPlayer;
-let ergebnis=[null,null,null,null,null];
-let rahmen=['handP1','handP2','handP3','handP4','handP5'];
+let result=[null,null,null,null,null];
+let border=['handP1','handP2','handP3','handP4','handP5'];
 let text=[nameP1,nameP2,nameP3,nameP4,nameP5];
 let help=0;
 
@@ -411,20 +411,20 @@ function setplayer(a,b){
 
     if(b===currentPlayer-1){
     if(checked[currentPlayer-1]!=false){
-        document.getElementById(rahmen[b]).style.borderColor='blue';
+        document.getElementById(border[b]).style.borderColor='blue';
     }
     }else{
-        document.getElementById(rahmen[b]).style.borderColor='black';
+        document.getElementById(border[b]).style.borderColor='black';
     }
-    if(ergebnis[b]!=null){
-        if(ergebnis[b]){
-            document.getElementById(rahmen[b]).style.borderColor='green';
+    if(result[b]!=null){
+        if(result[b]){
+            document.getElementById(border[b]).style.borderColor='green';
         }
-        if(!ergebnis[b]){
-            document.getElementById(rahmen[b]).style.borderColor='red';
+        if(!result[b]){
+            document.getElementById(border[b]).style.borderColor='red';
         }
-        if(ergebnis[b]==="tie"){
-            document.getElementById(rahmen[b]).style.borderColor='orange';
+        if(result[b]==="tie"){
+            document.getElementById(border[b]).style.borderColor='orange';
         }
     }
     text[b].innerHTML = '<p><strong>' + a + '</strong></p>';
