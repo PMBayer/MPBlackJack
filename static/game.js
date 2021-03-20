@@ -104,22 +104,22 @@ socket.on('updateButton', (data1, data2) => {
 });
 
 socket.on('getResult', (data1, data2) => {
-    for(let i = 0; i < 5; i++){
-        if(data1[i] > 21){
-           result[i] = false;
-        }else {
-           if(verloren(data2)){
-               result[i] = true;
-           }else{
-               if(data1[i] > getHandwert(data2)){
-                   result[i] = true;
-               }else{
-                   if(data1[i] ===  getHandwert(data2)){
-                       result[i] = 'draw';
-                   }
-                   result[i] = false;
-               }
-           }
+    for (let i = 0; i < 5; i++) {
+        if (data1[i] > 21) {
+            result[i] = false;
+        } else {
+            if (verloren(data2)) {
+                result[i] = true;
+            } else {
+                if (data1[i] > getHandwert(data2)) {
+                    result[i] = true;
+                } else {
+                    if (data1[i] === getHandwert(data2)) {
+                        result[i] = 'draw';
+                    }
+                    result[i] = false;
+                }
+            }
         }
     }
     socket.emit('updateplayers');
@@ -172,19 +172,19 @@ function updatePlayers(data, ws, help, s) {
         if (notEmpty) {
             switch (data[ws[i]].playerNumber) {
                 case 1:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber-1)
+                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
                     break;
                 case 2:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber-1)
+                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
                     break;
                 case 3:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber-1)
+                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
                     break;
                 case 4:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber-1)
+                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
                     break;
                 case 5:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber-1)
+                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
                     break;
             }
             updatePlayers2(s, i);
@@ -358,7 +358,9 @@ function stand() {
     if (playerNumber === currentPlayer) {
         socket.emit('getHands')
         socket.emit('getGameInformation');
-        setTimeout(function () { socket.emit('sendResult', currentPlayer - 2, getHandwert(hands[currentPlayer - 2]))}, 100);
+        setTimeout(function () {
+            socket.emit('sendResult', currentPlayer - 2, getHandwert(hands[currentPlayer - 2]))
+        }, 100);
     }
     socket.emit('getDealer');
     socket.emit('getCardDeck');
@@ -368,12 +370,12 @@ function stand() {
 }
 
 function playersFinished() {
-        let x = Dspiel(clientDealer, cardDeck);
-        socket.emit('transferCardDeck', x[0]);
-        socket.emit('transferDealer', x[1]);
-        //setTimeout(restart, 10000);
-        restart();
-        socket.emit('getResult');
+    let x = Dspiel(clientDealer, cardDeck);
+    socket.emit('transferCardDeck', x[0]);
+    socket.emit('transferDealer', x[1]);
+    //setTimeout(restart, 10000);
+    restart();
+    socket.emit('getResult');
 }
 
 function restart() {
@@ -400,10 +402,10 @@ function setPlayerBorder(a, b) {
     text[b].innerHTML = '<p><strong>' + a + '</strong></p>';
 }
 
-function correction(){
-    if(gameState){
-        if(checked[currentPlayer-1] === false){
-            checked[currentPlayer-1] = true;
+function correction() {
+    if (gameState) {
+        if (checked[currentPlayer - 1] === false) {
+            checked[currentPlayer - 1] = true;
             getCheckedFromServer();
             currentPlayer = 10;
             socket.emit('getGameInformation');
@@ -413,7 +415,7 @@ function correction(){
 
 /************************* Universal Test Function *******************************/
 
-$("#stack").mouseenter(function(){
+$("#stack").mouseenter(function () {
     stack.title = "Karten im Stapel: " + cardDeck.length;
 });
 

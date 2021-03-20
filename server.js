@@ -8,6 +8,8 @@ const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server);
 
+const dir = path.join(__dirname, 'images');
+
 app.set('port', 5000);
 app.use('/static', express.static(__dirname + '/static'));
 
@@ -19,6 +21,8 @@ app.get('/', function (req, res) {
 app.get('/style.css', function (req, res) {
     res.sendFile(__dirname + "/" + "style.css");
 });
+
+app.use(express.static(dir));
 
 //starting the server
 server.listen(5000, function () {
@@ -79,11 +83,11 @@ io.on('connection', (socket) => {
         io.sockets.emit('showDealer', dealer);
     });
 
-    socket.on('getPlayerNumber', (data) =>{
+    socket.on('getPlayerNumber', (data) => {
         io.sockets.emit('receivePlayer', players[socket.id].playerNumber);
     });
 
-    socket.on('changeState', (data) =>{
+    socket.on('changeState', (data) => {
         state = !data;
         io.sockets.emit('changeState');
     })
@@ -142,14 +146,14 @@ io.on('connection', (socket) => {
 
 
 io.on('connection', (socket) => {
-    if(playerAmount === 0){
+    if (playerAmount === 0) {
         io.sockets.emit('createCardDeck');
         //console.log(cardDeck);
     }
-    if(state){
+    if (state) {
         io.sockets.emit('gameInProgress');
     }
-    if(dealer != null){
+    if (dealer != null) {
         io.sockets.emit('showDealer', dealer);
     }
     io.sockets.emit('updateplayers', players, ws, help, playerHands);
@@ -163,7 +167,7 @@ io.on('connection', (socket) => {
         'name': '',
         'playerNumber': getPlayerNumber(),
         'handValue': 0,
-        'ready' : false,
+        'ready': false,
     }
 
     console.log(players);
@@ -171,16 +175,16 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         playerAmount -= 1;
 
-        if(playerAmount === 0){
+        if (playerAmount === 0) {
             restart();
         }
 
-        if(players[socket.id].playerNumber === currentPlayer){
+        if (players[socket.id].playerNumber === currentPlayer) {
             getLastPlayer();
             currentPlayer += 1;
             io.sockets.emit('getGameInformation', currentPlayer, checked, lastPlayer);
-            io.sockets.emit('playerLeft', currentPlayer-1);
-            if(currentPlayer > lastPlayer){
+            io.sockets.emit('playerLeft', currentPlayer - 1);
+            if (currentPlayer > lastPlayer) {
                 io.sockets.emit('endRound');
             }
         }
@@ -194,15 +198,15 @@ io.on('connection', (socket) => {
             decMaxPlayer1(players[socket.id].playerNumber);
         }
 
-        if(players[socket.id].playerNumber < 6){
-            if(checked[players[socket.id].playerNumber -1] === true){
+        if (players[socket.id].playerNumber < 6) {
+            if (checked[players[socket.id].playerNumber - 1] === true) {
                 readyAmount -= 1;
             }
             checked[players[socket.id].playerNumber - 1] = false;
         }
 
-        if(players[socket.id].playerNumber < 6){
-            playerHands[players[socket.id].playerNumber -1] = false;
+        if (players[socket.id].playerNumber < 6) {
+            playerHands[players[socket.id].playerNumber - 1] = false;
             io.sockets.emit('playerLeft', players[socket.id].playerNumber);
         }
 
@@ -233,7 +237,7 @@ let maxPlayer = 0;
 const help = [];
 let u = false;
 
-function restart(){
+function restart() {
     result = [null, null, null, null, null];
     checked = [false, false, false, false, false];
     state = false;
@@ -249,10 +253,10 @@ function restart(){
 
 }
 
-function getLastPlayer(){
+function getLastPlayer() {
     let x = 0;
-    for(let i = 0; i < checked.length; i++){
-        if(checked[i] === true){
+    for (let i = 0; i < checked.length; i++) {
+        if (checked[i] === true) {
             x = i;
         }
     }
@@ -266,16 +270,16 @@ function getTime() {
 }
 
 function addWS(x) {
-    if(help.length === 0){
+    if (help.length === 0) {
         ws.push(x);
-    }else{
+    } else {
         let p = 1000;
-        for(let i=0; i < help.length; i++){
-            if(help[i] < p){
+        for (let i = 0; i < help.length; i++) {
+            if (help[i] < p) {
                 p = help[i];
             }
         }
-        ws[p-1] = x;
+        ws[p - 1] = x;
     }
 
 }
@@ -340,8 +344,8 @@ function removeWS2(x) {
     }
 }
 
-function removeWS1(x){
-    ws[x-1] = null;
+function removeWS1(x) {
+    ws[x - 1] = null;
 }
 
 

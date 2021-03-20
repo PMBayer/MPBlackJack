@@ -7,7 +7,7 @@ function getRandomInt(max) {
 function getCard(zahl, zeichen2) {
     let zeichen = ['Kreuz', 'Pik', 'Herz', 'Karo']
     let besonders = ['Bube', 'Dame', 'König']
-    let karte=[]
+    let karte = []
     if (zahl < 11) {
         if (zahl === 1) {
             karte[0] = 'Ass';
@@ -22,16 +22,16 @@ function getCard(zahl, zeichen2) {
 }
 
 /* vermutlich nur für tests kann am ende vermutlich gelöscht werden */
-function getCardgesamt(c){
-    return c[0]+' ';
+function getCardgesamt(c) {
+    return c[0] + ' ';
 }
 
-function getCardwert(c){
+function getCardwert(c) {
     let besonders = ['Bube', 'Dame', 'König']
-    if(c[0] === 'Ass'){
+    if (c[0] === 'Ass') {
         return 11;
     }
-    if(c[0]=== besonders[0] || c[0]=== besonders[1] || c[0]=== besonders[2]){
+    if (c[0] === besonders[0] || c[0] === besonders[1] || c[0] === besonders[2]) {
         return 10;
     }
     return c[0];
@@ -40,19 +40,19 @@ function getCardwert(c){
 /************************* Ziehstapelfunktionen *********************************/
 function getZiehstapel() {
     let stapel = [];
-    stapel=Ziehstapelerneuern(stapel);
+    stapel = Ziehstapelerneuern(stapel);
     return stapel;
 }
 
-function Ziehstapelgeben (s1) {
+function Ziehstapelgeben(s1) {
     let stelle = getRandomInt(s1.length);
     let karte = s1.splice(stelle, 1);
-    if (s1.length===0) {
-        s1=Ziehstapelerneuern(s1);
+    if (s1.length === 0) {
+        s1 = Ziehstapelerneuern(s1);
     }
-    let alles=[];
-    alles[0]=s1;
-    alles[1]=karte;
+    let alles = [];
+    alles[0] = s1;
+    alles[1] = karte;
     return alles;
 }
 
@@ -71,15 +71,15 @@ function Ziehstapelerneuern(s) {
 
 /************************* allgemeine Spielerfunktionen *********************************/
 
-function ziehen(h,s,m) {
-    let gesamt=[]
+function ziehen(h, s, m) {
+    let gesamt = []
     for (let d1 = 0; d1 < m; d1++) {
         let hilf3 = Ziehstapelgeben(s);
         h.push(hilf3[1]);
-        s=hilf3[0];
+        s = hilf3[0];
     }
-    gesamt[0]=s;
-    gesamt[1]=h;
+    gesamt[0] = s;
+    gesamt[1] = h;
     return gesamt;
 }
 
@@ -118,7 +118,7 @@ function rescuePossible(h) {
             if (kriterium3 === 'Ass') {
                 Kriterium2[0] = 1;
                 Kriterium1[0] = Kriterium2;
-                h[ret1]=Kriterium1;
+                h[ret1] = Kriterium1;
                 ret1 = anzahl;
             }
         }
@@ -131,16 +131,16 @@ function rescuePossible(h) {
 
 function dealer(s) {
     let dHandundstapel = [];
-    dHandundstapel=ziehen(dHandundstapel ,s,1)
+    dHandundstapel = ziehen(dHandundstapel, s, 1)
     return dHandundstapel;
 }
 
 
-function Dspiel(h,s) {
-    let total=[s,h];
+function Dspiel(h, s) {
+    let total = [s, h];
     while (getHandwert(total[1]) < 17) {
-        total=ziehen(total[1],total[0],1);
-        total[1]=rescuePossible(total[1])
+        total = ziehen(total[1], total[0], 1);
+        total[1] = rescuePossible(total[1])
     }
     return total;
 }
@@ -149,19 +149,19 @@ function Dspiel(h,s) {
 
 function spieler(s) {
     let sHandundstapel = [];
-    sHandundstapel = ziehen(sHandundstapel,s,2);
+    sHandundstapel = ziehen(sHandundstapel, s, 2);
     return sHandundstapel;
 }
 
 
-function Sspiel(h,s) {
+function Sspiel(h, s) {
     let total;
-    total=ziehen(h,s,1);
-    total[1]=rescuePossible(total[1])
-    if(getHandwert(total[1]) <= 22){
-        total[2]=true;
-    }else{
-        total[2]=false;
+    total = ziehen(h, s, 1);
+    total[1] = rescuePossible(total[1])
+    if (getHandwert(total[1]) <= 22) {
+        total[2] = true;
+    } else {
+        total[2] = false;
     }
     return total;
 }
