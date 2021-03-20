@@ -10,6 +10,7 @@ const dealerText = document.getElementById('dealerID');
 const readyButton = document.getElementById('ready');
 const count = document.getElementById('countdown');
 const handDealer = document.getElementById('handDealer')
+const cardsDealer = document.getElementById('dealerCards')
 
 
 /************************ Emit Events ***********************************/
@@ -55,7 +56,7 @@ socket.on('showDealer', function (data) {
     handDealer.innerHTML = '';
     for( let i = 0; i < listOfCards.length; i++){
         nameP4.innerHTML = listOfCards[i];
-        handDealer.innerHTML += '<div class="formatDealer"><img src=' + listOfCards[i] + 'width=100% heigh=100%></div>';
+        handDealer.innerHTML += '<div class="formatDealer*-"><img src=' + listOfCards[i] + 'width=100% heigh=100%></div>';
     }
     nameP4.innerHTML = listOfCards[0];
 });

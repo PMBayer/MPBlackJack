@@ -63,18 +63,21 @@
 /*****************************************************************************************************************/
 .handDealer
 {
+    border: solid black;
     height: 100%;
-    width: 10%;
-    margin-left: 44.6%;
+    width: 80%;
+    margin-left: 44.6%;             /*44.6*/
     float: left;
+
 }
 
 .stack
 {
+    border:solid black;
     height: 100%;
     width: 10%;
-
-    margin-left: 26.35%;
+    position: absolute;
+    margin-left: 80%;
     float: left;
 }
 
@@ -140,10 +143,10 @@
 
 .formatDealer
 {
-    height: 100%;
     width: 10%;
-    margin-left: 44.6%;
-    float: left
+    float: left;
+    margin-left: 1%;
 }
+
 
 
