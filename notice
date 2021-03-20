@@ -1,5 +1,4 @@
-/*function getCorrespondingCards(someHand){
+function getCorrespondingCards(someHand){
     let listOfCards = [];
     for(let i = 0; i < someHand.length;i++){
-
-}*/
+}

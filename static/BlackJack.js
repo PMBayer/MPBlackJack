@@ -6,7 +6,7 @@ function getRandomInt(max) {
 /************************* Kartenfunktionen *********************************/
 function getCard(zahl, zeichen2) {
     let zeichen = ['Kreuz', 'Pik', 'Herz', 'Karo']
-    let besonders = ['Bube', 'Dame', 'König']
+    let besonders = ['Bube', 'Dame', 'Koenig']
     let karte = []
     if (zahl < 11) {
         if (zahl === 1) {
@@ -58,14 +58,15 @@ function Ziehstapelgeben(s1) {
 
 function Ziehstapelerneuern(s) {
     let anzahldecks = 6;
-    for (let i = 1; i < 14; i++) {
-        for (let i2 = 0; i2 < 4; i2++) {
-            for (let i3 = 0; i3 < anzahldecks; i3++) {
+    for (let i3 = 0; i3 < anzahldecks; i3++) {
+        for (let i = 1; i < 14; i++) {
+            for (let i2 = 0; i2 < 4; i2++) {
                 const card5 = getCard(i, i2);
                 s.push(card5);
             }
         }
     }
+
     return s;
 }
 
