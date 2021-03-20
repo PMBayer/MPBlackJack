@@ -440,12 +440,12 @@ function korrektur(){
     }
 }
 
-$("#stapel").mouseenter(function(){
+$("#stack").mouseenter(function(){
     stacktext.title = "Karten im Stapel: "+cardDeck.length;
 });
 
 
-const  stacktext = document.getElementById('stapel');
+const  stacktext = document.getElementById('stack');
 
 
 function countdown(){

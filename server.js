@@ -8,8 +8,11 @@ const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server);
 
+const dir = path.join(__dirname, 'images');
+
 app.set('port', 5000);
 app.use('/static', express.static(__dirname + '/static'));
+app.use('/images', express.static(dir));
 
 // Routing
 app.get('/', function (req, res) {
