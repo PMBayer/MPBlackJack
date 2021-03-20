@@ -79,7 +79,6 @@ io.on('connection', (socket) => {
 
     socket.on('transferDealer', (data) => {
         dealer = data;
-        console.log(dealer);
         io.sockets.emit('showDealer', dealer);
     });
 
@@ -104,8 +103,6 @@ io.on('connection', (socket) => {
 
     socket.on('transferHand', (data, data2) => {
         playerHands[data2] = data;
-        console.log(playerHands);
-        console.log(playerHands[data2]);
         io.sockets.emit('updateplayers', players, ws, help, playerHands);
     });
 
@@ -119,11 +116,11 @@ io.on('connection', (socket) => {
 
     socket.on('updateHands', (data) => {
         playerHands = data;
-        console.log(playerHands);
         io.sockets.emit('updateplayers', players, ws, help, playerHands)
     })
 
     socket.on('getDealer', (data) => {
+
         io.sockets.emit('showDealer', dealer);
     });
 
@@ -132,14 +129,11 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sendResult', (data1, data2) => {
-        console.log(data1);
-        console.log(data2);
         result[data1] = data2;
 
     })
 
     socket.on('getResult', (data) => {
-        console.log(result);
         io.sockets.emit('getResult', result, dealer);
     });
 });
@@ -148,7 +142,6 @@ io.on('connection', (socket) => {
 io.on('connection', (socket) => {
     if (playerAmount === 0) {
         io.sockets.emit('createCardDeck');
-        //console.log(cardDeck);
     }
     if (state) {
         io.sockets.emit('gameInProgress');

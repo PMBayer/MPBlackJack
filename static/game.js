@@ -8,8 +8,8 @@ const nameP4 = document.getElementById('nameP4');
 const nameP5 = document.getElementById('nameP5');
 const dealerText = document.getElementById('dealerID');
 const readyButton = document.getElementById('ready');
-const stacktext = document.getElementById('stacktext');
 const stack = document.getElementById('stack');
+const imageDealer = document.getElementById('imgDealer')
 
 
 /************************ Emit Events ***********************************/
@@ -52,6 +52,7 @@ socket.on('createCardDeck', (data) => {
 
 socket.on('showDealer', (data) => {
     clientDealer = data;
+    //getCorrespondingCards(dealer)
     dealerText.innerHTML = '<br>' + gesamteHand(clientDealer);
 });
 
@@ -412,6 +413,12 @@ function correction() {
         }
     }
 }
+
+/*function getCorrespondingCards(someHand){
+    let listOfCards = [];
+    for(let i = 0; i < someHand.length;i++){
+
+}*/
 
 /************************* Universal Test Function *******************************/
 
