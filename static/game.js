@@ -8,9 +8,7 @@ const nameP4 = document.getElementById('nameP4');
 const nameP5 = document.getElementById('nameP5');
 const dealerText = document.getElementById('dealerID');
 const readyButton = document.getElementById('ready');
-const stack = document.getElementById('stack');
-const imageDealer = document.getElementById('imgDealer');
-const countdown = document.getElementById('countdown');
+const count = document.getElementById('countdown');
 
 
 /************************ Emit Events ***********************************/
@@ -21,135 +19,139 @@ function emitUsername() {
     });
 }
 
-function getPlayerData() {
+function getPlayerData(){
     socket.emit('playerData');
-    socket.on('playerData', function (data) {
+    socket.on('playerData', function(data){
         playerData = data;
     })
 }
 
 /*********************** Listen for Events ******************************/
-
-socket.on('username', (data, ws, help, s) => {
-    updatePlayers(data, ws, help, s);
+socket.on('username', function (data, ws, help,s) {
+   updateplayers(data, ws, help,s);
 });
 
-socket.on('refresh', (number) => {
-    clearNameField(number);
+socket.on('refresh', function (number){
+   clearNameField(number);
 });
 
-socket.on('refreshButton', (data) => {
+socket.on('refreshButton', function (data){
     setTimeout(setReadyButton, 100);
-});
+})
 
-socket.on('getCardDeck', (data) => {
+socket.on('getCardDeck', function (data){
     cardDeck = data;
 });
 
-socket.on('createCardDeck', (data) => {
+socket.on('createCardDeck', function (data){
     cardDeck = getZiehstapel();
     socket.emit('transferCardDeck', cardDeck);
 });
 
-socket.on('showDealer', (data) => {
+socket.on('showDealer', function (data){
     clientDealer = data;
-    //getCorrespondingCards(dealer)
     dealerText.innerHTML = '<br>' + gesamteHand(clientDealer);
 });
 
-socket.on('receivePlayer', (data) => {
+socket.on('receivePlayer', function (data){
     playerNumber = data;
 });
 
-socket.on('changeState', (data) => {
+socket.on('changeState', function (data){
     gameState = !gameState;
 });
 
-socket.on('getState', (data) => {
+socket.on('getState', function (data){
     gameState = data;
-});
+})
 
-socket.on('gameInProgress', (data) => {
+socket.on('gameInProgress', function (data){
     gameInProgress();
-});
+})
 
-socket.on('getGameInformation', (data, data2, data3) => {
+socket.on('getGameInformation', function (data, data2, data3){
     currentPlayer = data;
     checked = data2;
     lastPlayer = data3;
     socket.emit('updateplayers');
 });
 
-socket.on('updateplayers', (data, data2, data3, data4) => {
-    updatePlayers(data, data2, data3, data4);
-    setTimeout(correction, 300);
+socket.on('updateplayers', function (data, data2, data3, data4){
+    updateplayers(data, data2, data3, data4);
+    setTimeout(korrektur,300);
+
 });
 
-socket.on('transferReadyAmount', (data) => {
+socket.on('transferReadyAmount', function (data){
     readyAmount = data
 });
 
-socket.on('retrieveChecked', (data) => {
+socket.on('retrieveChecked', function (data){
     checked = data;
 });
 
-socket.on('getHands', (data) => {
+socket.on('getHands', function (data){
     hands = data;
     socket.emit('getCardDeck');
 });
 
-socket.on('updateButton', (data1, data2) => {
-    readyAmount = data1;
-    playerAmount = data2;
-    document.getElementById('ready').style.visibility = 'visible';
-    setReadyButton();
+socket.on('reset', function (data){
+    ergebnis = data;
 });
 
-socket.on('getResult', (data1, data2) => {
-    for (let i = 0; i < 5; i++) {
-        if (data1[1] != null) {
-            if (data1[i] > 21) {
-                result[i] = false;
-            } else {
-                if (verloren(data2)) {
-                    result[i] = true;
-                } else {
-                    if (data1[i] > getHandwert(data2)) {
-                        result[i] = true;
-                    } else {
-                        if (data1[i] === getHandwert(data2)) {
-                            result[i] = 'draw';
-                        }
-                        result[i] = false;
+socket.on('endround', function (data){
+    playersFinished();
+});
+
+socket.on('leaved', function (data){
+    document.getElementById(rahmen[data-1]).style.borderColor='black';
+});
+
+socket.on('startcountdown', function (data){
+    help=10;
+   countdown();
+});
+
+
+socket.on('getergebnis', function (data,data2){
+    //test(data)
+    for(let i=0;i<5;i++){
+
+        if(data[i]!=null){
+        if(data[i]>21){
+            ergebnis[i]=false;
+        }else{
+            if(verloren(data2)){
+                ergebnis[i]=true
+            }else{
+                if(data[i]>getHandwert(data2)){
+                    ergebnis[i]=true
+                }else{
+                    if(data[i]===getHandwert(data2)){
+                        ergebnis[i]="tie";
+                    }else{
+                        ergebnis[i]=false;
                     }
                 }
             }
         }
+        //test(ergebnis[i]);
+        }
+
     }
+    //test(getHandwert(data2))
     socket.emit('updateplayers');
 });
 
-socket.on('reset', (data) => {
-    result = data;
+socket.on('updatebutton', function (data,data2){
+    readyAmount= data;
+    playerAmount= data2;
+    document.getElementById('ready').style.visibility = "visible";
+    setReadyButton();
 });
 
-socket.on('endRound', (data) => {
-    playersFinished();
-});
-
-socket.on('playerLeft', (data) => {
-    document.getElementById(border[data - 1]).style.borderColor = 'black';
-})
-
-socket.on('startCountdown', (data) => {
-    countdownTime = 10;
-    setCountdown();
-}
-)
-;
-
-function clearNameField(number) {
-    if (number < 6) {
+function clearNameField(number){
+    if(number < 6){
         switch (number) {
             case 1:
                 nameP1.innerHTML = '<p><strong>' + '' + '</strong></p>';
@@ -172,63 +174,65 @@ function clearNameField(number) {
     setTimeout(setReadyButton, 100);
 }
 
-function updatePlayers(data, ws, help, s) {
-    for (let i = 0; i < ws.length; i++) {
+function updateplayers(data, ws, help,s) {
+    for(let i = 0; i < ws.length; i++){
         let notEmpty = true;
-        for (let j = 0; j < help.length; j++) {
-            if (help[j] === i + 1) {
+        for(let j = 0; j < help.length; j++){
+            if(help[j] === i+1){
                 notEmpty = false;
             }
         }
-        if (notEmpty) {
+        if(notEmpty){
             switch (data[ws[i]].playerNumber) {
                 case 1:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
+                    setplayer(data[ws[i]].name,data[ws[i]].playerNumber-1)
                     break;
                 case 2:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
+                    setplayer(data[ws[i]].name,data[ws[i]].playerNumber-1)
                     break;
                 case 3:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
+                    setplayer(data[ws[i]].name,data[ws[i]].playerNumber-1)
                     break;
                 case 4:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
+                    setplayer(data[ws[i]].name,data[ws[i]].playerNumber-1)
                     break;
                 case 5:
-                    setPlayerBorder(data[ws[i]].name, data[ws[i]].playerNumber - 1)
+                    setplayer(data[ws[i]].name,data[ws[i]].playerNumber-1)
                     break;
             }
-            updatePlayers2(s, i);
+            updateplayers2(s,i);
+
         }
     }
     getPlayerAmount();
     setTimeout(setReadyButton, 100);
 }
 
-function updatePlayers2(s, i) {
-    if (s[i] !== false) {
+function updateplayers2(s,i){
+    if(s[i]!== false){
         switch (i) {
             case 0:
-                nameP1.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+
+                nameP1.innerHTML += '<p>' +'<br>' + gesamteHand(s[i]) + '</p>';
                 break;
             case 1:
-                nameP2.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                nameP2.innerHTML += '<p>' +'<br>' + gesamteHand(s[i]) + '</p>';
                 break;
             case 2:
-                nameP3.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                nameP3.innerHTML += '<p>' +'<br>' + gesamteHand(s[i]) + '</p>';
                 break;
             case 3:
-                nameP4.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                nameP4.innerHTML += '<p>' +'<br>' + gesamteHand(s[i]) + '</p>';
                 break;
             case 4:
-                nameP5.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                nameP5.innerHTML += '<p>' +'<br>' + gesamteHand(s[i]) + '</p>';
                 break;
         }
     }
 }
 
 /************************** Game Logic Implementation **********************/
-/********* Global Var *************/
+/********* ready Button *************/
 let playerData = {};
 let checked = [false, false, false, false, false];
 let playerAmount = 0;
@@ -241,30 +245,28 @@ let clientDealer;
 let clientPlayer;
 let hands;
 let lastPlayer;
-let result = [null, null, null, null, null];
-const border = ['handP1', 'handP2', 'handP3', 'handP4', 'handP5'];
-const text = [nameP1, nameP2, nameP3, nameP4, nameP5];
-let countdownTime;
+let ergebnis=[null,null,null,null,null];
+let rahmen=['handP1','handP2','handP3','handP4','handP5'];
+let text=[nameP1,nameP2,nameP3,nameP4,nameP5];
+let help=0;
 
 
-/********* ready Button *************/
-
-$("#ready").click(function () {
+$("#ready").click(function(){
     getPlayerData();
     getCheckedFromServer();
     getPlayerAmount();
     setTimeout(readyCheck, 100);
 });
 
-function readyCheck() {
-    if (playerData.playerNumber < 6) {
-        checked[playerData.playerNumber - 1] = !checked[playerData.playerNumber - 1];
+function readyCheck(){
+    if(playerData.playerNumber < 6){
+        checked[playerData.playerNumber-1] = !checked[playerData.playerNumber-1];
     }
 
     socket.emit('checked', checked);
     readyAmount = 0;
-    for (let i = 0; i < 5; i++) {
-        if (checked[i] === true) {
+    for(let i = 0; i < 5; i++){
+        if(checked[i] === true){
             readyAmount++;
         }
     }
@@ -273,7 +275,7 @@ function readyCheck() {
     socket.emit('transferReadyAmount');
     socket.emit('refreshButton');
 
-    if (playerAmount === readyAmount) {
+    if(playerAmount === readyAmount) {
         socket.emit('changeState', gameState);
         socket.emit('getCardDeck');
         setTimeout(startGame, 100);
@@ -282,30 +284,30 @@ function readyCheck() {
     }
 }
 
-function gameInProgress() {
+function gameInProgress(){
     document.getElementById('ready').style.visibility = "hidden";
 }
 
-function getCheckedFromServer() {
+function getCheckedFromServer(){
     socket.emit('retrieveChecked');
 }
 
-function getPlayerAmount() {
+function getPlayerAmount(){
     socket.emit('getPlayerAmount');
-    socket.on('playerAmount', function (data) {
-        if (data > 5) {
+    socket.on('playerAmount', function(data){
+        if(data > 5){
             playerAmount = 5;
-        } else {
+        }else{
             playerAmount = data;
         }
     })
 }
 
-function setReadyButton() {
+function setReadyButton(){
     readyButton.innerHTML = "Bereit (" + readyAmount + "/" + playerAmount + ")";
 }
 
-function sendReadyAmountToServer() {
+function sendReadyAmountToServer(){
     socket.emit('setReadyAmount', readyAmount);
 }
 
@@ -315,8 +317,8 @@ function startGame() {
     clientDealer = a[1];
     let d;
     let c;
-    for (let i = 0; i < 5; i++) {
-        if (checked[i] === true) {
+    for(let i = 0; i < 5; i++){
+        if(checked[i] === true){
             d = spieler(cardDeck);
             cardDeck = d[0];
             clientPlayer = d[1];
@@ -328,121 +330,132 @@ function startGame() {
     socket.emit('transferDealer', clientDealer);
 }
 
-/************ Hit Button **************/
+/************ Ziehen Button **************/
 
-$("#draw").click(function () {
-    if (gameState) {
+$("#draw").click(function(){
+    if(gameState){
         socket.emit('getPlayerNumber');
         setTimeout(drawCard, 100);
     }
 });
 
-function drawCard() {
-    if (playerNumber === currentPlayer) {
+function drawCard(){
+    if(playerNumber === currentPlayer){
+        //test("läuft!")
         socket.emit('getHands');
         setTimeout(draw, 100);
     }
 }
 
-function draw() {
-    if (playerNumber === currentPlayer) {
-        let x = ziehen(hands[currentPlayer - 1], cardDeck, 1);
-        socket.emit('transferCardDeck', x[0]);
-        rescuePossible(x[1]);
-        hands[currentPlayer - 1] = x[1];
-        socket.emit('updateHands', hands);
-        if (verloren(x[1])) {
-            socket.emit('getPlayerNumber');
-            setTimeout(stand, 100);
-        }
+function draw(){
+    if(playerNumber === currentPlayer){
+    let x = ziehen(hands[currentPlayer - 1], cardDeck,1);
+    socket.emit('transferCardDeck', x[0]);
+    rettungmöglich(x[1]);
+    hands[currentPlayer - 1] = x[1];
+    socket.emit('updateHands', hands);
+    if(verloren(x[1])){
+         socket.emit('getPlayerNumber');
+         setTimeout(stand, 100);
+    }
     }
 }
 
 /************ Stand Button **************/
 
-$("#stand").click(function () {
-    if (gameState) {
+$("#stand").click(function(){
+    if(gameState){
         socket.emit('getPlayerNumber');
         setTimeout(stand, 100);
     }
 });
 
-function stand() {
-    if (playerNumber === currentPlayer) {
-        socket.emit('getHands')
+function stand(){
+    if(playerNumber === currentPlayer){
+            test(playerNumber);
+            test(currentPlayer)
+        socket.emit('getHands');
         socket.emit('getGameInformation');
-        setTimeout(function () {
-            socket.emit('sendResult', currentPlayer - 2, getHandwert(hands[currentPlayer - 2]))
-        }, 100);
+        setTimeout(function(){ socket.emit('sendergebnis',currentPlayer-2,getHandwert(hands[currentPlayer-2])) }, 100);
     }
     socket.emit('getDealer');
     socket.emit('getCardDeck');
     setTimeout(playersFinished, 100);
 }
 
-function playersFinished() {
-    if (playerNumber === lastPlayer && currentPlayer-1 === lastPlayer) {
+function playersFinished(){
+        //test(playerNumber);
+        //test(lastPlayer);
+        //test(currentPlayer);
+        if(playerNumber === lastPlayer && currentPlayer-1===lastPlayer){
         let x = Dspiel(clientDealer, cardDeck);
         socket.emit('transferCardDeck', x[0]);
         socket.emit('transferDealer', x[1]);
-        //setTimeout(restart, 10000);
         restart();
-        socket.emit('getResult');
-    }
+        socket.emit('getergebnis');
+        }
 }
 
-function restart() {
+function restart(){
     socket.emit('restart');
 }
 
-function setPlayerBorder(a, b) {
-    if (b === currentPlayer - 1) {
-        if (checked[currentPlayer - 1] != false) {              // might cause problems
-            document.getElementById(border[b]).style.borderColor = 'blue';
-        }
-    } else {
-        document.getElementById(border[b]).style.borderColor = 'black';
+
+/************************* Universal Test Function *******************************/
+
+function test(s){
+    nameP3.innerHTML += '<p><strong>' +'<br>' + s + '</strong></p>';
+}
+
+function setplayer(a,b){
+
+    if(b===currentPlayer-1){
+    if(checked[currentPlayer-1]!=false){
+        document.getElementById(rahmen[b]).style.borderColor='blue';
     }
-    if (result[b] !== null) {
-        if (result[b]) {
-            document.getElementById(border[b]).style.borderColor = 'green';
+    }else{
+        document.getElementById(rahmen[b]).style.borderColor='black';
+    }
+    if(ergebnis[b]!=null){
+        if(ergebnis[b]){
+            document.getElementById(rahmen[b]).style.borderColor='green';
         }
-        if (!result[b]) {
-            document.getElementById(border[b]).style.borderColor = 'red';
+        if(!ergebnis[b]){
+            document.getElementById(rahmen[b]).style.borderColor='red';
         }
-        if (result[b] === 'draw') {
-            document.getElementById(border[b]).style.borderColor = 'orange';
+        if(ergebnis[b]==="tie"){
+            document.getElementById(rahmen[b]).style.borderColor='orange';
         }
     }
     text[b].innerHTML = '<p><strong>' + a + '</strong></p>';
 }
-
-function correction() {
-    if (gameState) {
-        if (checked[currentPlayer - 1] === false) {
+function korrektur(){
+    //test("a")
+    if(gameState){
+        if(checked[currentPlayer-1]===false){
+            //test("b")
             getCheckedFromServer();
             socket.emit('getGameInformation');
         }
     }
 }
 
-function setCountdown() {
-    if (countdownTime = 0) {
-        countdown.innterHtml = '';
-    } else {
-        countdown.innerHTML = '' + countdownTime;
-        countdownTime -= 1;
-        setTimeout(setCountdown, 1000);
-    }
-}
-
-/************************* Universal Test Function *******************************/
-
-$("#stack").mouseenter(function () {
-    stack.title = "Karten im Stapel: " + cardDeck.length;
+$("#stapel").mouseenter(function(){
+    stacktext.title = "Karten im Stapel: "+cardDeck.length;
 });
 
 
+const  stacktext = document.getElementById('stapel');
 
 
+function countdown(){
+    //test(help);
+    if(help==0){
+        count.innerHTML ='';
+    }else{
+        count.innerHTML =''+help;
+        help=help-1;
+        setTimeout(countdown,1000);
+    }
+}
 
