@@ -21,13 +21,20 @@
         }
     </script>
 
+    <style>
+        body {
+            background-image: url('images/background.jpg');
+        }
+    </style>
+
     <p id="x" hidden></p>
 </head>
 
 <body onload="getUsername()">
-        <p id="countdown"></p>
+        <div style="background-image: url('images/background.jpg');">
+        <p id="countdown" class="countdown"></p>
 
-        <h1 style align="center">Dealer:</h1>
+        <h1 style align="center">A Multiplayer Blackjack Game</h1>
 
         <div class="upperField">
 
@@ -43,27 +50,27 @@
 
         <div class="playerField">
                 <div id="handP1" class="handPlayer">
-                    <text><p id="nameP1"></p></text>
+                    <text><p id="nameP1" align="center"></p></text>
                     <img id="img1" width=100% heigh=100%>
                 </div>
 
                 <div id="handP2" class="handPlayer">
-                    <text><p id="nameP2"></p></text>
+                    <text><p id="nameP2" align="center"></p></text>
                     <img id="img2" width=100% heigh=100%>
                 </div>
 
                 <div id="handP3" class="handPlayer">
-                    <text><p id="nameP3"></p></text>
+                    <text><p id="nameP3" align="center"></p></text>
                     <img id="img3" width=100% heigh=100%>
                 </div>
 
                 <div id="handP4" class="handPlayer">
-                    <text><p id="nameP4"></p></text>
+                    <text><p id="nameP4" align="center"></p></text>
                     <img id="img4" width=100% heigh=100%>
                 </div>
 
                 <div id="handP5" class="handPlayer" >
-                    <text><p id="nameP5"></p></text>
+                    <text><p id="nameP5" align="center"></p></text>
                     <img id="img5" width=100% heigh=100%>
                 </div>
         </div>

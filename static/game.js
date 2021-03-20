@@ -55,10 +55,8 @@ socket.on('showDealer', function (data) {
     const listOfCards = getCorrespondingCards(clientDealer);
     handDealer.innerHTML = '';
     for( let i = 0; i < listOfCards.length; i++){
-        nameP4.innerHTML = listOfCards[i];
-        handDealer.innerHTML += '<div class="formatDealer*-"><img src=' + listOfCards[i] + 'width=100% heigh=100%></div>';
+        handDealer.innerHTML += '<div class="formatDealer"><img src=' + listOfCards[i] + 'width=100% heigh=100%></div>';
     }
-    nameP4.innerHTML = listOfCards[0];
 });
 
 socket.on('receivePlayer', function (data) {
@@ -217,23 +215,24 @@ function updateplayers(data, ws, help, s) {
 }
 
 function updateplayers2(s, i) {
+    let listOfCards = getCorrespondingCards(s[i]);
+    let len = listOfCards.length
     if (s[i] !== false) {
         switch (i) {
             case 0:
-
-                nameP1.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                nameP1.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=75% heigh=100%></p>';
                 break;
             case 1:
-                nameP2.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                nameP2.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=90% heigh=100%></p>';
                 break;
             case 2:
-                nameP3.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                nameP3.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=100% heigh=100%></p>';
                 break;
             case 3:
-                nameP4.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                nameP4.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=100% heigh=100%></p>';
                 break;
             case 4:
-                nameP5.innerHTML += '<p>' + '<br>' + gesamteHand(s[i]) + '</p>';
+                nameP5.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=100% heigh=100%></p>';
                 break;
         }
     }
@@ -344,6 +343,7 @@ $("#draw").click(function () {
     if (gameState) {
         socket.emit('getPlayerNumber');
         setTimeout(drawCard, 100);
+        socket.emit('updateplayers')
     }
 });
 
@@ -359,7 +359,7 @@ function draw() {
     if (playerNumber === currentPlayer) {
         let x = ziehen(hands[currentPlayer - 1], cardDeck, 1);
         socket.emit('transferCardDeck', x[0]);
-        rettungmöglich(x[1]);
+        rescuePossible(x[1]);
         hands[currentPlayer - 1] = x[1];
         socket.emit('updateHands', hands);
         if (verloren(x[1])) {
@@ -380,8 +380,6 @@ $("#stand").click(function () {
 
 function stand() {
     if (playerNumber === currentPlayer) {
-        test(playerNumber);
-        test(currentPlayer)
         socket.emit('getHands');
         socket.emit('getGameInformation');
         setTimeout(function () {
