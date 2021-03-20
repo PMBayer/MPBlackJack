@@ -9,7 +9,8 @@ const nameP5 = document.getElementById('nameP5');
 const dealerText = document.getElementById('dealerID');
 const readyButton = document.getElementById('ready');
 const stack = document.getElementById('stack');
-const imageDealer = document.getElementById('imgDealer')
+const imageDealer = document.getElementById('imgDealer');
+const countdown = document.getElementById('countdown');
 
 
 /************************ Emit Events ***********************************/
@@ -106,19 +107,21 @@ socket.on('updateButton', (data1, data2) => {
 
 socket.on('getResult', (data1, data2) => {
     for (let i = 0; i < 5; i++) {
-        if (data1[i] > 21) {
-            result[i] = false;
-        } else {
-            if (verloren(data2)) {
-                result[i] = true;
+        if (data1[1] != null) {
+            if (data1[i] > 21) {
+                result[i] = false;
             } else {
-                if (data1[i] > getHandwert(data2)) {
+                if (verloren(data2)) {
                     result[i] = true;
                 } else {
-                    if (data1[i] === getHandwert(data2)) {
-                        result[i] = 'draw';
+                    if (data1[i] > getHandwert(data2)) {
+                        result[i] = true;
+                    } else {
+                        if (data1[i] === getHandwert(data2)) {
+                            result[i] = 'draw';
+                        }
+                        result[i] = false;
                     }
-                    result[i] = false;
                 }
             }
         }
@@ -137,6 +140,13 @@ socket.on('endRound', (data) => {
 socket.on('playerLeft', (data) => {
     document.getElementById(border[data - 1]).style.borderColor = 'black';
 })
+
+socket.on('startCountdown', (data) => {
+    countdownTime = 10;
+    setCountdown();
+}
+)
+;
 
 function clearNameField(number) {
     if (number < 6) {
@@ -234,6 +244,8 @@ let lastPlayer;
 let result = [null, null, null, null, null];
 const border = ['handP1', 'handP2', 'handP3', 'handP4', 'handP5'];
 const text = [nameP1, nameP2, nameP3, nameP4, nameP5];
+let countdownTime;
+
 
 /********* ready Button *************/
 
@@ -365,18 +377,18 @@ function stand() {
     }
     socket.emit('getDealer');
     socket.emit('getCardDeck');
-    if (playerNumber === lastPlayer && currentPlayer === lastPlayer) {
-        setTimeout(playersFinished, 100);
-    }
+    setTimeout(playersFinished, 100);
 }
 
 function playersFinished() {
-    let x = Dspiel(clientDealer, cardDeck);
-    socket.emit('transferCardDeck', x[0]);
-    socket.emit('transferDealer', x[1]);
-    //setTimeout(restart, 10000);
-    restart();
-    socket.emit('getResult');
+    if (playerNumber === lastPlayer && currentPlayer-1 === lastPlayer) {
+        let x = Dspiel(clientDealer, cardDeck);
+        socket.emit('transferCardDeck', x[0]);
+        socket.emit('transferDealer', x[1]);
+        //setTimeout(restart, 10000);
+        restart();
+        socket.emit('getResult');
+    }
 }
 
 function restart() {
@@ -385,7 +397,9 @@ function restart() {
 
 function setPlayerBorder(a, b) {
     if (b === currentPlayer - 1) {
-        document.getElementById(border[b]).style.borderColor = 'blue';
+        if (checked[currentPlayer - 1] != false) {              // might cause problems
+            document.getElementById(border[b]).style.borderColor = 'blue';
+        }
     } else {
         document.getElementById(border[b]).style.borderColor = 'black';
     }
@@ -406,19 +420,21 @@ function setPlayerBorder(a, b) {
 function correction() {
     if (gameState) {
         if (checked[currentPlayer - 1] === false) {
-            checked[currentPlayer - 1] = true;
             getCheckedFromServer();
-            currentPlayer = 10;
             socket.emit('getGameInformation');
         }
     }
 }
 
-/*function getCorrespondingCards(someHand){
-    let listOfCards = [];
-    for(let i = 0; i < someHand.length;i++){
-
-}*/
+function setCountdown() {
+    if (countdownTime = 0) {
+        countdown.innterHtml = '';
+    } else {
+        countdown.innerHTML = '' + countdownTime;
+        countdownTime -= 1;
+        setTimeout(setCountdown, 1000);
+    }
+}
 
 /************************* Universal Test Function *******************************/
 
