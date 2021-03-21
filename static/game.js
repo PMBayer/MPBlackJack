@@ -13,7 +13,7 @@ const handDealer = document.getElementById('handDealer')
 const cardsDealer = document.getElementById('dealerCards')
 const stacktext = document.getElementById('stacktext');
 const stack = document.getElementById('stack');
-const namePs = [document.getElementById('nameP1'), document.getElementById('nameP2'), document.getElementById('nameP3'), document.getElementById('nameP4'), document.getElementById('nameP5')]
+const namePs = [nameP1, nameP2, nameP3, nameP4, nameP5]
 
 
 /************************ Emit Events ***********************************/
@@ -362,7 +362,6 @@ function restart() {
     socket.emit('restart');
 }
 
-
 /************************* Universal Test Function *******************************/
 
 function test(s) {
@@ -406,7 +405,6 @@ function korrektur() {
 $("#stack").mouseenter(function () {
     stacktext.title = "Karten im Stapel: " + cardDeck.length;
 });
-
 
 function countdown() {
     //test(help);
