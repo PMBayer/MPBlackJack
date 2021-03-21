@@ -11,6 +11,9 @@ const readyButton = document.getElementById('ready');
 const count = document.getElementById('countdown');
 const handDealer = document.getElementById('handDealer')
 const cardsDealer = document.getElementById('dealerCards')
+const stacktext = document.getElementById('stacktext');
+const stack = document.getElementById('stack');
+const namePs = [nameP1, nameP2, nameP3, nameP4, nameP5]
 
 
 /************************ Emit Events ***********************************/
@@ -158,23 +161,7 @@ socket.on('updatebutton', function (data, data2) {
 
 function clearNameField(number) {
     if (number < 6) {
-        switch (number) {
-            case 1:
-                nameP1.innerHTML = '<p><strong>' + '' + '</strong></p>';
-                break;
-            case 2:
-                nameP2.innerHTML = '<p><strong>' + '' + '</strong></p>';
-                break;
-            case 3:
-                nameP3.innerHTML = '<p><strong>' + '' + '</strong></p>';
-                break;
-            case 4:
-                nameP4.innerHTML = '<p><strong>' + '' + '</strong></p>';
-                break;
-            case 5:
-                nameP5.innerHTML = '<p><strong>' + '' + '</strong></p>';
-                break;
-        }
+        namePs[number - 1].innerHTML = '<p><strong>' + '' + '</strong></p>';
     }
     getPlayerAmount();
     setTimeout(setReadyButton, 100);
@@ -189,25 +176,8 @@ function updateplayers(data, ws, help, s) {
             }
         }
         if (notEmpty) {
-            switch (data[ws[i]].playerNumber) {
-                case 1:
-                    setplayer(data[ws[i]].name, data[ws[i]].playerNumber - 1)
-                    break;
-                case 2:
-                    setplayer(data[ws[i]].name, data[ws[i]].playerNumber - 1)
-                    break;
-                case 3:
-                    setplayer(data[ws[i]].name, data[ws[i]].playerNumber - 1)
-                    break;
-                case 4:
-                    setplayer(data[ws[i]].name, data[ws[i]].playerNumber - 1)
-                    break;
-                case 5:
-                    setplayer(data[ws[i]].name, data[ws[i]].playerNumber - 1)
-                    break;
-            }
+            setplayer(data[ws[i]].name, data[ws[i]].playerNumber-1);
             updateplayers2(s, i);
-
         }
     }
     getPlayerAmount();
@@ -218,23 +188,7 @@ function updateplayers2(s, i) {
     let listOfCards = getCorrespondingCards(s[i]);
     let len = listOfCards.length
     if (s[i] !== false) {
-        switch (i) {
-            case 0:
-                nameP1.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=75% heigh=100%></p>';
-                break;
-            case 1:
-                nameP2.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=90% heigh=100%></p>';
-                break;
-            case 2:
-                nameP3.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=100% heigh=100%></p>';
-                break;
-            case 3:
-                nameP4.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=100% heigh=100%></p>';
-                break;
-            case 4:
-                nameP5.innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=100% heigh=100%></p>';
-                break;
-        }
+        namePs[i].innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=75% heigh=100%></p>';
     }
 }
 
