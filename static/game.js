@@ -408,9 +408,6 @@ $("#stack").mouseenter(function () {
 });
 
 
-const stacktext = document.getElementById('stack');
-
-
 function countdown() {
     //test(help);
     if (help == 0) {
