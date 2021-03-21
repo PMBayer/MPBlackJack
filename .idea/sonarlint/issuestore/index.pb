@@ -16,6 +16,3 @@ C
 static/BlackJack.js,2\3\23d5461917ea2587a717e42945c6b7974e63ecb4
 S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
-:
-
-notice.txt,3\e\3e9585d6df928ca61bee194aa7f6cb1f6723b906

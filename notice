@@ -2,3 +2,9 @@ function getCorrespondingCards(someHand){
     let listOfCards = [];
     for(let i = 0; i < someHand.length;i++){
 }
+
+<style>
+        body {
+            background-image: url('images/background.jpg');
+        }
+    </style>
