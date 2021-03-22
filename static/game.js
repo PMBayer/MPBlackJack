@@ -87,7 +87,7 @@ socket.on('getGameInformation', function (data, data2, data3) {
 
 socket.on('updateplayers', function (data, data2, data3, data4) {
     updateplayers(data, data2, data3, data4);
-    setTimeout(korrektur, 300);
+    setTimeout(correction, 300);
 
 });
 
@@ -187,6 +187,7 @@ function updateplayers(data, ws, help, s) {
 function updateplayers2(s, i) {
     let listOfCards = getCorrespondingCards(s[i]);
     let len = listOfCards.length
+
     if (s[i] !== false) {
         namePs[i].innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=75% heigh=100%></p>';
     }
@@ -391,7 +392,7 @@ function setplayer(a, b) {
     text[b].innerHTML = '<p><strong>' + a + '</strong></p>';
 }
 
-function korrektur() {
+function correction() {
     //test("a")
     if (gameState) {
         if (checked[currentPlayer - 1] === false) {
@@ -402,7 +403,7 @@ function korrektur() {
     }
 }
 
-$("#stack").mouseenter(function () {
+$("#stack").mouseover(function () {
     stackText.title = "Karten im Stapel: " + cardDeck.length;
 });
 
@@ -445,6 +446,10 @@ function getCorrespondingCards(someHand) {
     }
     return listOfCards;
 }
+
+
+
+
 
 
 

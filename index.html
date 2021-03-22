@@ -5,7 +5,8 @@
     <link rel="shortcut icon" href="#">
     <script src="/socket.io/socket.io.js"></script>
     <meta charset="UTF-8">
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -13,9 +14,8 @@
 
     <script>
         function getUsername(){
-            let txt;
             const username = prompt("Please enter a username: ");
-            if(username == null || username == ''){
+            if(username === null || username === ''){
                 getUsername();
             }else {
                 document.getElementById('x').innerHTML = username;
@@ -29,8 +29,6 @@
             background-image: url('images/background4.jpg');
         }
     </style>
-
-    <p id="x" hidden></p>
 </head>
 
 <body onload="getUsername()">
@@ -46,35 +44,35 @@
 
             </div>
 
-            <div id="stack" class="stack" href="#">
-                <img id="imgStack" src="images\yellow_back.png" width=100% heigh=100%>
+            <div id="stack" class="stack" >
+                <img id="imgStack" src="images\yellow_back.png" width=100% height=100% alt="Stack of Cards">
             </div>
         </div>
 
         <div class="playerField">
-                <div id="handP1" href="#" class="handPlayer">
+                <div id="handP1" class="handPlayer">
                     <text><p id="nameP1" align="center"></p></text>
-                    <img id="img1" href="#" width=100% heigh=100%>
+                    <a href="#" id="cards1"><img  id="img1"  width=100% ></a>
                 </div>
 
                 <div id="handP2" class="handPlayer">
                     <text><p id="nameP2" align="center"></p></text>
-                    <img id="img2" href="#" width=100% heigh=100%>
+                    <a href="#" id="cards2"><img title="img2" id="img2" width=100% ></a>
                 </div>
 
                 <div id="handP3" class="handPlayer">
                     <text><p id="nameP3" align="center"></p></text>
-                    <img id="img3" href="#" width=100% heigh=100%>
+                    <a href="#" id="cards3"><img  id="img3"  width=100% ></a>
                 </div>
 
                 <div id="handP4" class="handPlayer">
                     <text><p id="nameP4" align="center"></p></text>
-                    <img id="img4" href="#" width=100% heigh=100%>
+                    <a href="#" id="cards4"><img  id="img4"  width=100% ></a>
                 </div>
 
                 <div id="handP5" class="handPlayer" >
                     <text><p id="nameP5" align="center"></p></text>
-                    <img id="img5" href="#" width=100% heigh=100%>
+                    <a href="#" id="cards5"><img  id="img5"  width=100% ></a>
                 </div>
         </div>
 
@@ -84,6 +82,7 @@
                 <button id="stand" class="buttons">Stand</button>
             </div>
 
+        <p id="x" hidden></p>
 
 </body>
 <script type="text/javascript" src='static\BlackJack.js'></script>
