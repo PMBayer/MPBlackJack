@@ -11,5 +11,8 @@
     <orderEntry type="library" name="@types/jquery" level="application" />
     <orderEntry type="library" name="@types/socket.io" level="application" />
     <orderEntry type="library" name="@types/tooltipster" level="application" />
+    <orderEntry type="library" name="jquery-ui" level="application" />
+    <orderEntry type="library" name="jquery-1.12.4" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
   </component>
 </module>
