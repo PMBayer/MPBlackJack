@@ -11,7 +11,7 @@ const readyButton = document.getElementById('ready');
 const count = document.getElementById('countdown');
 const handDealer = document.getElementById('handDealer')
 const cardsDealer = document.getElementById('dealerCards')
-const stacktext = document.getElementById('stacktext');
+const stackText = document.getElementById('stack');
 const stack = document.getElementById('stack');
 const namePs = [nameP1, nameP2, nameP3, nameP4, nameP5]
 
@@ -403,7 +403,7 @@ function korrektur() {
 }
 
 $("#stack").mouseenter(function () {
-    stacktext.title = "Karten im Stapel: " + cardDeck.length;
+    stackText.title = "Karten im Stapel: " + cardDeck.length;
 });
 
 function countdown() {
@@ -445,5 +445,7 @@ function getCorrespondingCards(someHand) {
     }
     return listOfCards;
 }
+
+
 
 
