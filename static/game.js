@@ -189,10 +189,12 @@ function updateplayers2(s, i) {
     let len = listOfCards.length
 
     if (s[i] !== false) {
-        namePs[i].innerHTML += '<p>' + '<img src=' + listOfCards[len-1] + 'width=75% heigh=100%></p>';
+        i+=1;
+        namePs[i-1].innerHTML +=   '<a href="#" id="cards'+i+'">' + '<img title="test" id="img'+i+'" src=' + listOfCards[len-1] + 'width=75% heigh=100%></a>';
+        $("#cards"+i+"").tooltip({ content: getCompleteHand(listOfCards)});
     }
 }
-
+// '<img src='+listOfCards[len-1]+' width=20%/>'
 /************************** Game Logic Implementation **********************/
 /********* ready Button *************/
 let playerData = {};
@@ -447,7 +449,19 @@ function getCorrespondingCards(someHand) {
     return listOfCards;
 }
 
+/*
+$("#handP1").mouseover(function () {
+    document.getElementById('handP1').title = "hello";
+});*/
 
+function getCompleteHand(x){
+    let imgSrc = '';
+    for(let i = 0; i < x.length; i++){
+        let singleStr = '<img src='+x[i]+' width=20%/>'
+        imgSrc += singleStr
+    }
+    return imgSrc;
+}
 
 
 
