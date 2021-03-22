@@ -100,6 +100,7 @@ io.on('connection', function (socket) {
         currentPlayer += 1;
         console.log(lastPlayer+" hier!!!!!!!!!!!!!!!!!!!!")
         io.sockets.emit('getGameInformation', currentPlayer, checked, lastPlayer);
+        io.sockets.emit('getCardDeck', cardDeck)
     })
 
     socket.on('transferHand', function (data, data2){
@@ -148,6 +149,8 @@ io.on('connection', (socket) => {
     if(playerAmount === 0){
         io.sockets.emit('createCardDeck');
         //console.log(cardDeck);
+    }else{
+        io.sockets.emit('getCardDeck', cardDeck);
     }
     if(state){
         io.sockets.emit('gameInProgress');

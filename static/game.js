@@ -176,7 +176,7 @@ function updateplayers(data, ws, help, s) {
             }
         }
         if (notEmpty) {
-            setplayer(data[ws[i]].name, data[ws[i]].playerNumber-1);
+            setPlayer(data[ws[i]].name, data[ws[i]].playerNumber-1);
             updateplayers2(s, i);
         }
     }
@@ -185,6 +185,7 @@ function updateplayers(data, ws, help, s) {
 }
 
 function updateplayers2(s, i) {
+    $(".ui-tooltip-content").parents('div').remove();
     let listOfCards = getCorrespondingCards(s[i]);
     let len = listOfCards.length
 
@@ -194,7 +195,7 @@ function updateplayers2(s, i) {
         $("#cards"+i+"").tooltip({ content: getCompleteHand(listOfCards)});
     }
 }
-// '<img src='+listOfCards[len-1]+' width=20%/>'
+
 /************************** Game Logic Implementation **********************/
 /********* ready Button *************/
 let playerData = {};
@@ -285,7 +286,7 @@ function startGame() {
         if (checked[i] === true) {
             d = spieler(cardDeck);
             cardDeck = d[0];
-            clientPlayer = d[1];
+            clientPlayer = rescuePossible(d[1]);
             socket.emit('transferHand', clientPlayer, i);
         }
     }
@@ -341,7 +342,7 @@ function stand() {
         socket.emit('getGameInformation');
         setTimeout(function () {
             socket.emit('sendergebnis', currentPlayer - 2, getHandwert(hands[currentPlayer - 2]))
-        }, 100);
+        }, 50);
     }
     socket.emit('getDealer');
     socket.emit('getCardDeck');
@@ -349,9 +350,6 @@ function stand() {
 }
 
 function playersFinished() {
-    //test(playerNumber);
-    //test(lastPlayer);
-    //test(currentPlayer);
     if (playerNumber === lastPlayer && currentPlayer - 1 === lastPlayer) {
         let x = Dspiel(clientDealer, cardDeck);
         socket.emit('transferCardDeck', x[0]);
@@ -365,13 +363,11 @@ function restart() {
     socket.emit('restart');
 }
 
-/************************* Universal Test Function *******************************/
-
 function test(s) {
     nameP3.innerHTML += '<p><strong>' + '<br>' + s + '</strong></p>';
 }
 
-function setplayer(a, b) {
+function setPlayer(a, b) {
 
     if (b === currentPlayer - 1) {
         if (checked[currentPlayer - 1] != false) {
@@ -395,10 +391,8 @@ function setplayer(a, b) {
 }
 
 function correction() {
-    //test("a")
     if (gameState) {
         if (checked[currentPlayer - 1] === false) {
-            //test("b")
             getCheckedFromServer();
             socket.emit('getGameInformation');
         }
@@ -410,7 +404,6 @@ $("#stack").mouseover(function () {
 });
 
 function countdown() {
-    //test(help);
     if (help == 0) {
         count.innerHTML = '';
     } else {
@@ -448,11 +441,6 @@ function getCorrespondingCards(someHand) {
     }
     return listOfCards;
 }
-
-/*
-$("#handP1").mouseover(function () {
-    document.getElementById('handP1').title = "hello";
-});*/
 
 function getCompleteHand(x){
     let imgSrc = '';
