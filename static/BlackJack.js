@@ -4,21 +4,21 @@ function getRandomInt(max) {
 }
 
 /************************* Kartenfunktionen *********************************/
-function getCard(zahl, zeichen2) {
-    let zeichen = ['Kreuz', 'Pik', 'Herz', 'Karo']
-    let besonders = ['Bube', 'Dame', 'Koenig']
-    let karte = []
-    if (zahl < 11) {
-        if (zahl === 1) {
-            karte[0] = 'Ass';
+function getCard(figure, symbol2) {
+    let symbol = ['Kreuz', 'Pik', 'Herz', 'Karo']
+    let special = ['Bube', 'Dame', 'Koenig']
+    let cards = []
+    if (figure < 11) {
+        if (figure === 1) {
+            cards[0] = 'Ass';
         } else {
-            karte[0] = zahl;
+            cards[0] = figure;
         }
     } else {
-        karte[0] = besonders[zahl - 11];
+        cards[0] = special[figure - 11];
     }
-    karte[1] = zeichen[zeichen2];
-    return karte;
+    cards[1] = symbol[symbol2];
+    return cards;
 }
 
 /* vermutlich nur für tests kann am ende vermutlich gelöscht werden */
@@ -26,29 +26,28 @@ function getCardgesamt(c) {
     return c[0] + ' ';
 }
 
-function getCardwert(c) {
-    let besonders = ['Bube', 'Dame', 'König']
+function getCardValue(c) {
+    let special = ['Bube', 'Dame', 'König']
     if (c[0] === 'Ass') {
         return 11;
     }
-    if (c[0] === besonders[0] || c[0] === besonders[1] || c[0] === besonders[2]) {
+    if (c[0] === special[0] || c[0] === special[1] || c[0] === special[2]) {
         return 10;
     }
     return c[0];
 }
 
 /************************* Ziehstapelfunktionen *********************************/
-function getZiehstapel() {
-    let stapel = [];
-    stapel = Ziehstapelerneuern(stapel);
-    return stapel;
+function getCardStack() {
+    let stack = [];
+    return renewStack(stack);
 }
 
 function Ziehstapelgeben(s1) {
     let stelle = getRandomInt(s1.length);
     let karte = s1.splice(stelle, 1);
     if (s1.length === 0) {
-        s1 = Ziehstapelerneuern(s1);
+        s1 = renewStack(s1);
     }
     let alles = [];
     alles[0] = s1;
@@ -56,7 +55,7 @@ function Ziehstapelgeben(s1) {
     return alles;
 }
 
-function Ziehstapelerneuern(s) {
+function renewStack(s) {
     let anzahldecks = 6;
     for (let i3 = 0; i3 < anzahldecks; i3++) {
         for (let i = 1; i < 14; i++) {
@@ -66,7 +65,6 @@ function Ziehstapelerneuern(s) {
             }
         }
     }
-
     return s;
 }
 
@@ -99,7 +97,7 @@ function getHandwert(h) {
     let total = 0;
     for (let h1 = 0; h1 < h.length; h1++) {
         let kartenwert = h[h1];
-        total += getCardwert(kartenwert[0]);
+        total += getCardValue(kartenwert[0]);
     }
     return total;
 }

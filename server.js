@@ -69,7 +69,6 @@ io.on('connection', function (socket) {
 
     socket.on('transferCardDeck', function (data){
         cardDeck = data;
-        //console.log(cardDeck);
     })
 
     socket.on('getCardDeck', function (data){
@@ -98,7 +97,6 @@ io.on('connection', function (socket) {
     socket.on('getGameInformation', function (data){
         getLastPlayer();
         currentPlayer += 1;
-        console.log(lastPlayer+" hier!!!!!!!!!!!!!!!!!!!!")
         io.sockets.emit('getGameInformation', currentPlayer, checked, lastPlayer);
         io.sockets.emit('getCardDeck', cardDeck)
     })
@@ -107,11 +105,11 @@ io.on('connection', function (socket) {
         playerHands[data2] = data;
         console.log(playerHands);
         console.log(playerHands[data2]);
-        io.sockets.emit('updateplayers', players, ws, help, playerHands);
+        io.sockets.emit('updatePlayers', players, ws, help, playerHands);
     });
 
-    socket.on('updateplayers', function (data){
-        io.sockets.emit('updateplayers', players, ws, help, playerHands);
+    socket.on('updatePlayers', function (data){
+        io.sockets.emit('updatePlayers', players, ws, help, playerHands);
     })
 
     socket.on('getHands', function (data){
@@ -121,7 +119,7 @@ io.on('connection', function (socket) {
     socket.on('updateHands', function (data){
         playerHands = data;
         console.log(playerHands);
-        io.sockets.emit('updateplayers', players, ws, help, playerHands)
+        io.sockets.emit('updatePlayers', players, ws, help, playerHands)
     })
 
     socket.on('getDealer', function (data){
@@ -129,18 +127,18 @@ io.on('connection', function (socket) {
     });
 
     socket.on('restart', function (data){
-        io.sockets.emit('startcountdown');
+        io.sockets.emit('startCountdown');
         setTimeout(restart, 10000);
     });
-    socket.on('sendergebnis', function (data,data2){
+    socket.on('sendResult', function (data,data2){
         console.log(data);
         console.log(data2);
-        ergebnis[data]=data2;
+        result[data]=data2;
     });
 
-   socket.on('getergebnis', function (data){
-        console.log(ergebnis);
-        io.sockets.emit('getergebnis', ergebnis, dealer);
+   socket.on('getResult', function (data){
+        console.log(result);
+        io.sockets.emit('getResult', result, dealer);
    });
 });
 
@@ -158,7 +156,7 @@ io.on('connection', (socket) => {
     if(dealer != null){
         io.sockets.emit('showDealer', dealer);
     }
-    io.sockets.emit('updateplayers', players, ws, help, playerHands);
+    io.sockets.emit('updatePlayers', players, ws, help, playerHands);
     io.sockets.emit('getGameInformation', currentPlayer, checked);
     playerAmount += 1;
     addWS(socket.id);
@@ -183,9 +181,9 @@ io.on('connection', (socket) => {
              getLastPlayer();
              currentPlayer += 1;
              io.sockets.emit('getGameInformation', currentPlayer, checked, lastPlayer);
-             io.sockets.emit('leaved',currentPlayer-1);
+             io.sockets.emit('left',currentPlayer-1);
              if(currentPlayer>lastPlayer){
-                io.sockets.emit('endround');
+                io.sockets.emit('endRound');
              }
         }
         console.log('Player ' + players[socket.id].name + ' disconnected at: ' + getTime());
@@ -214,7 +212,7 @@ io.on('connection', (socket) => {
 
         delete players[socket.id];
         console.log(playerHands);
-        io.sockets.emit('updateplayers', players, ws, help,playerHands);
+        io.sockets.emit('updatePlayers', players, ws, help,playerHands);
         console.log(ws);
         console.log(players);
     })
@@ -231,7 +229,7 @@ let state = false;
 let currentPlayer = 0;
 let playerHands = [false, false, false, false, false];
 let lastPlayer;
-let ergebnis=[null,null,null,null,null];
+let result=[null,null,null,null,null];
 
 
 function getLastPlayer(){
@@ -245,9 +243,8 @@ function getLastPlayer(){
 }
 
 function getTime() {
-    var today = new Date();
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    return time;
+    const today = new Date();
+    return today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 }
 
 const players = {};
@@ -295,7 +292,7 @@ function getHelp() {
 function decMaxPlayer2(x) {
     maxPlayer -= 1;
     if (x <= 5) {
-        for (i = 0; i < ws.length; i++) {
+        for (let i = 0; i < ws.length; i++) {
             if (players[ws[i]].playerNumber === 6) {
                 players[ws[i]].playerNumber = x;
                 u = true;
@@ -306,7 +303,7 @@ function decMaxPlayer2(x) {
             }
         }
     } else {
-        for (i = 0; i < ws.length; i++) {
+        for (let i = 0; i < ws.length; i++) {
             if (players[ws[i]].playerNumber > x) {
                 players[ws[i]].playerNumber -= 1;
             }
@@ -338,17 +335,17 @@ function removeWS1(x){
 }
 
 function restart(){
-    ergebnis=[null,null,null,null,null];
+    result=[null,null,null,null,null];
     checked = [false, false, false, false, false];
     readyAmount = 0;
     dealer=[];
     state = false;
     currentPlayer = 0;
     playerHands = [false, false, false, false, false];
-    io.sockets.emit('reset', ergebnis);
+    io.sockets.emit('reset', result);
     io.sockets.emit('changeState');
-    io.sockets.emit('updateplayers', players, ws, help,playerHands);
-    io.sockets.emit('updatebutton',readyAmount,playerAmount);
+    io.sockets.emit('updatePlayers', players, ws, help,playerHands);
+    io.sockets.emit('updateButton',readyAmount,playerAmount);
     io.sockets.emit('showDealer', dealer);
     console.log(players)
 
