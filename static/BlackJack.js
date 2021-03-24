@@ -27,7 +27,7 @@ function getCardgesamt(c) {
 }
 
 function getCardValue(c) {
-    let special = ['Bube', 'Dame', 'König']
+    let special = ['Bube', 'Dame', 'Koenig']
     if (c[0] === 'Ass') {
         return 11;
     }
