@@ -4,6 +4,7 @@ function getRandomInt(max) {
 }
 
 /************************* Kartenfunktionen *********************************/
+
 function getCard(figure, symbol2) {
     let symbol = ['Kreuz', 'Pik', 'Herz', 'Karo']
     let special = ['Bube', 'Dame', 'Koenig']
