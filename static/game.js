@@ -41,7 +41,7 @@ socket.on('refresh', function (number) {
 });
 
 socket.on('refreshButton', function (data) {
-    setTimeout(setReadyButton, 50);
+    setTimeout(setReadyButton, to);
 })
 
 socket.on('getCardDeck', function (data) {
@@ -164,7 +164,7 @@ function clearNameField(number) {
         namePs[number - 1].innerHTML = '<p><strong>' + '' + '</strong></p>';
     }
     getPlayerAmount();
-    setTimeout(setReadyButton, 50);
+    setTimeout(setReadyButton, to);
 }
 
 function updatePlayers(data, ws, help, s) {
@@ -181,7 +181,7 @@ function updatePlayers(data, ws, help, s) {
         }
     }
     getPlayerAmount();
-    setTimeout(setReadyButton, 50);
+    setTimeout(setReadyButton, to);
 }
 
 function updatePlayers2(s, i) {
@@ -214,13 +214,14 @@ let result = [null, null, null, null, null];
 let border = ['handP1', 'handP2', 'handP3', 'handP4', 'handP5'];
 let text = [nameP1, nameP2, nameP3, nameP4, nameP5];
 let help = 0;
+let to = 25;
 
 
 $("#ready").click(function () {
     getPlayerData();
     getCheckedFromServer();
     getPlayerAmount();
-    setTimeout(readyCheck, 50);
+    setTimeout(readyCheck, to);
 });
 
 function readyCheck() {
@@ -243,7 +244,7 @@ function readyCheck() {
     if (playerAmount === readyAmount) {
         socket.emit('changeState', gameState);
         socket.emit('getCardDeck');
-        setTimeout(startGame, 50);
+        setTimeout(startGame, to);
         socket.emit('gameInProgress');
         socket.emit('getGameInformation');
     }
@@ -300,7 +301,7 @@ function startGame() {
 $("#draw").click(function () {
     if (gameState) {
         socket.emit('getPlayerNumber');
-        setTimeout(drawCard, 50);
+        setTimeout(drawCard, to);
         socket.emit('updateplayers')
     }
 });
@@ -309,7 +310,7 @@ function drawCard() {
     if (playerNumber === currentPlayer) {
         //test("läuft!")
         socket.emit('getHands');
-        setTimeout(draw, 50);
+        setTimeout(draw, to);
     }
 }
 
@@ -322,7 +323,7 @@ function draw() {
         socket.emit('updateHands', hands);
         if (verloren(x[1])) {
             socket.emit('getPlayerNumber');
-            setTimeout(stand, 50);
+            setTimeout(stand, to);
         }
     }
 }
@@ -331,7 +332,7 @@ function draw() {
 $("#stand").click(function () {
     if (gameState) {
         socket.emit('getPlayerNumber');
-        setTimeout(stand, 50);
+        setTimeout(stand, to);
     }
 });
 
@@ -341,11 +342,11 @@ function stand() {
         socket.emit('getGameInformation');
         setTimeout(function () {
             socket.emit('sendResult', currentPlayer - 2, getHandwert(hands[currentPlayer - 2]))
-        }, 50);
+        }, to);
     }
     socket.emit('getDealer');
     socket.emit('getCardDeck');
-    setTimeout(playersFinished, 50);
+    setTimeout(playersFinished, to);
 }
 
 function playersFinished() {
