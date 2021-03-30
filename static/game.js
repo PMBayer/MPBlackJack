@@ -451,7 +451,7 @@ function getCompleteHand(x){
     return imgSrc;
 }
 
-
+// Hallo wie geht es?
 
 
 
